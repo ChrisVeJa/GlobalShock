@@ -203,7 +203,19 @@ function GSsimulation(
     # [Step 3] Eigenvector sorted by the max eigenvalue
     ξ = eigen(Ξ).vectors[:, end:-1:1]
 
-    # [Step 4] New Identification matrix
+    # [Step 4] Non fundamental Identification
+    Λ_  = Λ[:,:,posi]
+    ξ_  = ξ[:,2:end];
+    Ψ   = ξ_'*Λ_* ξ_;
+    Ψc  = sum(Ψ,dims=1);
+    Ψ   = convert(Array,Ψ');
+    Ψ[diagonal(Ψ)] = Ψc;
+    F   = Ψ[1:end-1,:] - Ψ[2:end,:];
+    aux = zeros(size(F)[2]);
+    aux[end] = 1;
+    wei = inv(F)*aux;
+
+    # [Step 5] New Identification matrix
     if Xblock
         Γ = [C1[:, 1:nx] * ξ C1[:, nx+1:end]]
     else
