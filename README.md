@@ -1,3 +1,3 @@
-## **GLOBAL SHOCKS: Heterogeneous response in Small Open Economies**
+## **GLOBAL SHOCKS:**
 
 #### Results by country:
