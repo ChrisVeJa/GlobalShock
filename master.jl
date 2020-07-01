@@ -11,6 +11,8 @@ using Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributi
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
 
+
+
 # ===============================================
 # [1] Estimation by country
 # ===============================================
@@ -59,3 +61,7 @@ dcx = (IRF = GScat(inp3,quint), FEVD= GScat(inp4,quint));
 
 GSGraph(ecx, "ECX", colg= :darkgoldenrod, subdir = "Groups");
 GSGraph(ecx, "DCX", colg = :darkorchid4 , subdir = "Groups");
+
+# ===============================================
+# [3] Non-fundamental commoditi price shock
+# ===============================================

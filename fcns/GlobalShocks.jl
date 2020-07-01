@@ -204,6 +204,7 @@ function GSsimulation(
     ξ = eigen(Ξ).vectors[:, end:-1:1]
 
     # [Step 4] Non fundamental Identification
+
     Λ_  = Λ[:,:,posi]
     ξ_  = ξ[:,2:end];
     Ψ   = ξ_'*Λ_* ξ_;
@@ -214,6 +215,10 @@ function GSsimulation(
     aux = zeros(size(F)[2]);
     aux[end] = 1;
     wei = inv(F)*aux;
+    ψ   = ξ_* wei;
+
+    # [Step 5] Final identification matrix
+    ξ   = [ξ[:,1] ψ]
 
     # [Step 5] New Identification matrix
     if Xblock
