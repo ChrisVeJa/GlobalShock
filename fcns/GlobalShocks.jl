@@ -202,18 +202,22 @@ function GSsimulation(
 
     # [Step 3] Eigenvector sorted by the max eigenvalue
     ξ = eigen(Ξ).vectors[:, end:-1:1]
+    nξ = size(ξ)[1];
 
-    # [Step 4] Non fundamental Identification
-    L   = [-ξ[2:end,1] ./ ξ[1,1] I(size(ξ)[1]-1)];
+    # [Step 4] NON FUNDAMENTAL SHOCK
+    L   = [-ξ[2:end,1] ./ ξ[1,1] I(nξ-1)];
     BL  = L*L';
     BL  = Array(BL);
     pos_tot=2;
     Λaux= L*Λ[:,:,pos_tot]*L';
-    ψ   = eigen(Λaux, BL).vectors[:,end:-1:1];
+    ψ   = eigen(Λaux, BL).vectors[:,end];
     Ψ   = convert(Array,(ψ'*L)');
+    Ξ   = [ξ[:,1] Ψ];
 
-    ξ   = [ξ[:,1] Ψ];
-    display(ξ'*ξ)
+    # New Identification matrix
+    nsp = nullspace(Array(Ξ'))
+    ξ   = [Ξ nsp[:,1:(nξ-2)]];
+
     # [Step 5] New Identification matrix
     if Xblock
         Γ = [C1[:, 1:nx] * ξ C1[:, nx+1:end]]
