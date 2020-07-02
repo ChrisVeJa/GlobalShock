@@ -204,7 +204,16 @@ function GSsimulation(
     ξ = eigen(Ξ).vectors[:, end:-1:1]
 
     # [Step 4] Non fundamental Identification
-    # [Step 5] Final identification matrix
+    L   = [-ξ[2:end,1] ./ ξ[1,1] I(size(ξ)[1]-1)];
+    BL  = L*L';
+    BL  = Array(BL);
+    pos_tot=2;
+    Λaux= L*Λ[:,:,pos_tot]*L';
+    ψ   = eigen(Λaux, BL).vectors[:,end:-1:1];
+    Ψ   = convert(Array,(ψ'*L)');
+
+    ξ   = [ξ[:,1] Ψ];
+    display(ξ'*ξ)
     # [Step 5] New Identification matrix
     if Xblock
         Γ = [C1[:, 1:nx] * ξ C1[:, nx+1:end]]
