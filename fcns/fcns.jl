@@ -31,7 +31,14 @@ end
 # ===============================================
 # [3] Function for graphs.
 # ===============================================
-function GSGraph(model, name; colg = :sienna, subdir = "Countries", varI=1, varF = 0)
+function GSGraph(model,
+	name,
+	labels;
+	colg = :sienna,
+	subdir = "Countries",
+	varI=1,
+	varF = 0,
+)
     nf = nfields(model.FevGS.Qntls)
 	if varF==0
 		varF = size(model.FevGS.Mean)[1];
@@ -46,27 +53,27 @@ function GSGraph(model, name; colg = :sienna, subdir = "Countries", varI=1, varF
     # FEVD GLOBAL shocks
 	name1 = ".//Figures//$subdir//FEV_" * name;
 	data  = model.FevGS;
-	ModelGraph(data,nf,varI,varF,name1,colg)
+	ModelGraph(data,nf,varI,varF,name1,labels,colg)
 	# ----------------------------------
     # IRF GLOBAL SHOCKS
 	name1 = ".//Figures//$subdir//IRF_" * name;
 	data  = model.IrfGS;
-	ModelGraph(data,nf,varI,varF,name1,colg)
+	ModelGraph(data,nf,varI,varF,name1,labels,colg)
 	# ----------------------------------
     # FEVD Non Fundamental shocks
 	name1 = ".//Figures//$subdir//FEVNF_" * name;
 	data  = model.FevNF;
-	ModelGraph(data,nf,varI,varF,name1,colg)
+	ModelGraph(data,nf,varI,varF,name1,labels,colg)
 	# ----------------------------------
     # IRF Non Fundamental SHOCKS
 	name1 = ".//Figures//$subdir//IRFNF_" * name;
 	data  = model.IrfNF;
-	ModelGraph(data,nf,varI,varF,name1,colg)
+	ModelGraph(data,nf,varI,varF,name1,labels,colg)
 end
 
 
 
-function ModelGraph(data,nf,varI,varF,name,colg)
+function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	quint = cat(dims = 3, [data.Qntls[i] for i = 1:nf]...)
 	quint = permutedims(quint, [2, 3, 1])
 	h, n, nvar = size(quint)
@@ -78,9 +85,25 @@ function ModelGraph(data,nf,varI,varF,name,colg)
 		line  = quint[:, 2, i]
 		LB 	  = line .- quint[:, 1, i]
 		UB    = quint[:, 3, i] .- line
-		plot!(1:h,line;ribbon = (LB, UB),tickfontsize = 6,subplot = j,c = [colg],
-			w = 1.5,fillalpha = 0.2,legend = false)
-		scatter!(1:h,meanG,markersize = 1.25,c = [colg],markershape = :x,tickfontsize = 6,subplot = j)
+		plot!(1:h,
+			line;
+			ribbon = (LB, UB),
+			tickfontsize = 6,
+			subplot = j,
+			c = [colg],
+			xlabel=labels[i],
+			w = 1.5,
+			fillalpha = 0.2,
+			legend = false,
+		)
+		scatter!(1:h,
+			meanG,
+			markersize = 1.25,
+			c = [colg],
+			markershape = :x,
+			tickfontsize = 6,
+			subplot = j,
+		)
 		j+=1;
 	end
 	savefig(name);

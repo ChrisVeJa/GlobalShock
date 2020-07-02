@@ -17,6 +17,7 @@ include(".//fcns//fcns.jl");
 df   = DataFrame(XLSX.readtable("basedato.xlsx", "data")...)
 name = [:GSArg :GSBra :GSChl :GSCol :GSPer :GSSoA :GSAus :GSCan :GSNrw :GSNzl];
 countries = [:Argentina :Brazil :Chile :Colombia :Peru :SouthAfrica :Australia :Canada :Norway :NewZeland];
+labels = ["GDP G20" "ComPrice" "BAA spread" "GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"];
 p = 2;
 h = 40;
 for i in 1:length(countries)
@@ -34,7 +35,7 @@ CouList = string.(name) .* ".png";
 
 for x in 1:length(countries)
     country = name[x];
-    ex= :(GSGraph($country,CouList[$x], colg = colist[$x], varI=4));
+    ex= :(GSGraph($country,CouList[$x], labels, colg = colist[$x], varI=4));
     eval(ex);
 end
 
@@ -60,5 +61,5 @@ dcx = (IrfGS = GScat(inp3,quint), FevGS= GScat(inp4,quint), IrfNF= GScat(inp7,qu
 inp1= nothing; inp2= nothing; inp3= nothing; inp4= nothing;
 inp5= nothing; inp6= nothing; inp7= nothing; inp8= nothing;
 
-GSGraph(ecx, "ECX", colg = :darkgoldenrod, subdir = "Groups");
-GSGraph(dcx, "DCX", colg = :darkorchid4 , subdir = "Groups");
+GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "Groups");
+GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "Groups");
