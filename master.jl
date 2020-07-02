@@ -86,7 +86,7 @@ p2 = plot(1:h,[GStoWorld[2,:,:]  NFtoWorld[2,:,:]],
         w = [2 2 1 1], style = [:solid :dash :dash :dash],
         markerstrokewidth= 0.1,
         );
-        
+
 p3 = plot(1:h,[GStoWorld[3,:,:]  NFtoWorld[3,:,:]],
         label="",
         color= [:red colist[2] colist[3] colist[4]],
@@ -96,3 +96,4 @@ p3 = plot(1:h,[GStoWorld[3,:,:]  NFtoWorld[3,:,:]],
         );
 plot(p1,p2,p3, layout=(1,3),size=(1200,400),title =["Global Output" "Commodity Price" "BAA spread"]);
 savefig(".//Figures//World//Comparison.png");
+cp(".//Figures",".//docs//images//Figures",force=true)
