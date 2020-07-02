@@ -41,24 +41,24 @@ end
 # ===============================================
 # [2] Creating groups of countries
 # ===============================================
-inp1 = (IRFGSArg, IRFGSBra,IRFGSChl ,IRFGSCol, IRFGSPer, IRFGSSoA);
-inp2 = (FEVDGSArg, FEVDGSBra,FEVDGSChl ,FEVDGSCol, FEVDGSPer, FEVDGSSoA);
-inp3 = (IRFGSAus, IRFGSCan, IRFGSNrw, IRFGSNzl);
-inp4 = (FEVDGSAus, FEVDGSCan, FEVDGSNrw, FEVDGSNzl);
+inp1 = (ExtraGSArg.irfgs, ExtraGSBra.irfgs, ExtraGSChl.irfgs, ExtraGSCol.irfgs, ExtraGSPer.irfgs, ExtraGSSoA.irfgs);
+inp2 = (ExtraGSArg.fevgs, ExtraGSBra.fevgs, ExtraGSChl.fevgs, ExtraGSCol.fevgs, ExtraGSPer.fevgs, ExtraGSSoA.fevgs);
+inp3 = (ExtraGSAus.irfgs, ExtraGSCan.irfgs, ExtraGSNrw.irfgs, ExtraGSNzl.irfgs);
+inp4 = (ExtraGSAus.fevgs, ExtraGSCan.fevgs, ExtraGSNrw.fevgs, ExtraGSNzl.fevgs);
+inp5 = (ExtraGSArg.irfnf, ExtraGSBra.irfnf, ExtraGSChl.irfnf, ExtraGSCol.irfnf, ExtraGSPer.irfnf, ExtraGSSoA.irfnf);
+inp6 = (ExtraGSArg.fevnf, ExtraGSBra.fevnf, ExtraGSChl.fevnf, ExtraGSCol.fevnf, ExtraGSPer.fevnf, ExtraGSSoA.fevnf);
+inp7 = (ExtraGSAus.irfnf, ExtraGSCan.irfnf, ExtraGSNrw.irfnf, ExtraGSNzl.irfnf);
+inp8 = (ExtraGSAus.fevnf, ExtraGSCan.fevnf, ExtraGSNrw.fevnf, ExtraGSNzl.fevnf);
 quint = [0.16 0.50 0.84];
 
-ecx = (IRF = GScat(inp1,quint), FEVD= GScat(inp2,quint));
-dcx = (IRF = GScat(inp3,quint), FEVD= GScat(inp4,quint));
+ExtraGSArg = nothing; ExtraGSBra = nothing; ExtraGSChl = nothing; ExtraGSCol = nothing; ExtraGSPer = nothing;
+ExtraGSSoA = nothing; ExtraGSAus = nothing; ExtraGSCan = nothing; ExtraGSNrw = nothing; ExtraGSNzl = nothing;
 
-(IRFGSArg, IRFGSBra,IRFGSChl ,IRFGSCol, IRFGSPer, IRFGSSoA) = (nothing ,nothing,nothing ,nothing,nothing ,nothing);
-(FEVDGSArg, FEVDGSBra,FEVDGSChl ,FEVDGSCol, FEVDGSPer, FEVDGSSoA)= (nothing ,nothing,nothing ,nothing,nothing ,nothing);
-(IRFGSAus, IRFGSCan, IRFGSNrw, IRFGSNzl) = (nothing ,nothing,nothing ,nothing);
-(FEVDGSAus, FEVDGSCan, FEVDGSNrw, FEVDGSNzl) = (nothing ,nothing,nothing ,nothing);
-(inp1, inp2 , inp3, inp4) = (nothing, nothing, nothing, nothing);
+ecx = (IrfGS = GScat(inp1,quint), FevGS= GScat(inp2,quint), IrfNF= GScat(inp5,quint), FevNF= GScat(inp6,quint));
+dcx = (IrfGS = GScat(inp3,quint), FevGS= GScat(inp4,quint), IrfNF= GScat(inp7,quint), FevNF= GScat(inp8,quint));
 
-GSGraph(ecx, "ECX", colg= :darkgoldenrod, subdir = "Groups");
-GSGraph(ecx, "DCX", colg = :darkorchid4 , subdir = "Groups");
+inp1= nothing; inp2= nothing; inp3= nothing; inp4= nothing;
+inp5= nothing; inp6= nothing; inp7= nothing; inp8= nothing;
 
-# ===============================================
-# [3] Non-fundamental commoditi price shock
-# ===============================================
+GSGraph(ecx, "ECX", colg = :darkgoldenrod, subdir = "Groups");
+GSGraph(dcx, "DCX", colg = :darkorchid4 , subdir = "Groups");
