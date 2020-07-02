@@ -55,11 +55,11 @@ quint = [0.16 0.50 0.84];
 ExtraGSArg = nothing; ExtraGSBra = nothing; ExtraGSChl = nothing; ExtraGSCol = nothing; ExtraGSPer = nothing;
 ExtraGSSoA = nothing; ExtraGSAus = nothing; ExtraGSCan = nothing; ExtraGSNrw = nothing; ExtraGSNzl = nothing;
 
-ecx = (IrfGS = GScat(inp1,quint), FevGS= GScat(inp2,quint), IrfNF= GScat(inp5,quint), FevNF= GScat(inp6,quint));
-dcx = (IrfGS = GScat(inp3,quint), FevGS= GScat(inp4,quint), IrfNF= GScat(inp7,quint), FevNF= GScat(inp8,quint));
+ecx = (IrfGS = GScat(inp1,quint), FevGS = GScat(inp2,quint), IrfNF = GScat(inp5,quint), FevNF = GScat(inp6,quint));
+dcx = (IrfGS = GScat(inp3,quint), FevGS = GScat(inp4,quint), IrfNF = GScat(inp7,quint), FevNF = GScat(inp8,quint));
 
-inp1= nothing; inp2= nothing; inp3= nothing; inp4= nothing;
-inp5= nothing; inp6= nothing; inp7= nothing; inp8= nothing;
+inp1 = nothing; inp2 = nothing; inp3 = nothing; inp4 = nothing;
+inp5 = nothing; inp6 = nothing; inp7 = nothing; inp8 = nothing;
 
 GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "Groups");
 GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "Groups");
