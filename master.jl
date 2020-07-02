@@ -11,8 +11,6 @@ using Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributi
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
 
-
-
 # ===============================================
 # [1] Estimation by country
 # ===============================================
@@ -22,7 +20,6 @@ countries = [:Argentina :Brazil :Chile :Colombia :Peru :SouthAfrica :Australia :
 p = 2;
 h = 40;
 for i in 1:length(countries)
-    display("****************************************");
     model = countries[i]
     display("Global shocks: $model")
     codmodel = gos_creator(df,i,name, p, h);
@@ -37,7 +34,7 @@ CouList = string.(name) .* ".png";
 
 for x in 1:length(countries)
     country = name[x];
-    ex= :(GSGraph($country,CouList[$x], colg = colist[$x]));
+    ex= :(GSGraph($country,CouList[$x], colg = colist[$x], varI=4));
     eval(ex);
 end
 

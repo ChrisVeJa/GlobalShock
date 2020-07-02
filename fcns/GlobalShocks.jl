@@ -18,16 +18,17 @@ end
 # [1.2] Post Estimation
 struct PostVAR
     Mean::Any
-    Std::Any
     Qntls::Any
 end
 # ------------------------------------------------------
 # [1.3] Output structure
 struct GSsolve
-    Set::Any              # Tuple with some settings of the model
-    Par::Parameters # Estimated parameters
-    IRF::PostVAR     # Impulse response function
-    FEVD::PostVAR    # Forecast Error Variances decomposition
+    Set::Any           # Tuple with some settings of the model
+    Par::Parameters    # Estimated parameters
+    IrfGS::PostVAR     # Impulse response function
+    FevGS::PostVAR     # Forecast Error Variances decomposition
+	IrfNF::PostVAR     # Impulse response function Non fundamental
+    FevNF::PostVAR     # Forecast Error Variances decomposition Non fundamental
 end
 
 ################################################################################
@@ -77,6 +78,8 @@ function GSstimation(
     ξ = Array{Float64,3}(undef, aux1, aux1, nmodls)
     IRFGS = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
     FEVGS = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
+	IRFNF = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
+    FEVNF = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
 
     for i = 1:nmodls
         out0, out1, out2, ξ[:, :, i] = GSsimulation(
@@ -95,6 +98,8 @@ function GSstimation(
         IRF, FEV = irf_fevd(out1, out2, h, m)
         IRFGS[:, :, i] = IRF[:, 1, :]
         FEVGS[:, :, i] = FEV[:, 1, :]
+		IRFNF[:, :, i] = IRF[:, 2, :]
+		FEVNF[:, :, i] = FEV[:, 2, :]
         Γ[:, i] = out2[:, 1]
     end
 
@@ -102,12 +107,19 @@ function GSstimation(
     # [2.1.4] Percentiles : Julia does not have a quintile
     # command that work in RN arrays
 
-    IRFGSM = dropdims(mean(IRFGS, dims = 3), dims = 3)
+	# -------- Means --------
+    IRFGSM  = dropdims(mean(IRFGS, dims = 3), dims = 3)
     FEVDGSM = dropdims(mean(FEVGS, dims = 3), dims = 3)
-    IRFGSS = dropdims(std(IRFGS, dims = 3), dims = 3)
-    FEVDGSS = dropdims(std(FEVGS, dims = 3), dims = 3)
-    IRFGSQ = Qntls(IRFGS, nmodls, quint, m, h)
+	IRFNFM  = dropdims(mean(IRFNF, dims = 3), dims = 3)
+    FEVDNFM = dropdims(mean(FEVNF, dims = 3), dims = 3)
+
+	# -------- Percentiles --------
+    IRFGSQ  = Qntls(IRFGS, nmodls, quint, m, h)
     FEVDGSQ = Qntls(FEVGS, nmodls, quint, m, h)
+	IRFNFQ  = Qntls(IRFNF, nmodls, quint, m, h)
+	FEVDNFQ = Qntls(FEVNF, nmodls, quint, m, h)
+
+	# -------------------------
     Γ = median(Γ, dims = 2)
     ξ = median(ξ, dims = 3)
     display("It is already done!")
@@ -122,12 +134,15 @@ function GSstimation(
         τ = [Lτ, Uτ],
         quintiles = quint,
     )
+	mytup =(irfgs = IRFGS, fevgs= FEVGS,irfnf = IRFNF,fevnf=FEVNF);
     return GSsolve(
         Set,
         Parameters(B, Σ, Γ, ξ),
-        PostVAR(IRFGSM, IRFGSS, IRFGSQ),
-        PostVAR(FEVDGSM, FEVDGSS, FEVDGSQ),
-    ), IRFGS, FEVGS;
+        PostVAR(IRFGSM, IRFGSQ),
+        PostVAR(FEVDGSM, FEVDGSQ),
+		PostVAR(IRFNFM, IRFNFQ),
+		PostVAR(FEVDNFM, FEVDNFQ),
+    ), mytup ;
 end
 
 # ------------------------------------------------------
