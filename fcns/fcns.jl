@@ -78,7 +78,11 @@ function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	quint = permutedims(quint, [2, 3, 1])
 	h, n, nvar = size(quint)
 	nrows = Int(ceil((varF-varI+1) / 3))
-	plot(layout = (nrows, 3))
+	if nrows==1
+		plot(layout = (nrows, 3),size=(1200,400),title =["Global Output" "Commodity Price" "BAA spread"])
+	else
+		plot(layout = (nrows, 3))
+	end
 	j = 1;
 	for i = varI:varF
 		meanG = data.Mean[i, :]
