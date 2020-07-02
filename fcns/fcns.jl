@@ -112,3 +112,38 @@ function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	end
 	savefig(name);
 end
+
+function GraphAux(raw, name)
+	nvar = size(raw)[1];
+	h    = size(raw)[2];
+	plot(legendfontsize=6,layout=(2,3),size=(1200,800),title =["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"])
+	for i in 1:nvar
+	        data = raw[i,:,:];
+	        if i!=2
+	                plot!(1:h,data, label="",
+	                        color= [:teal :darkgoldenrod], markersize = 3.5,
+	                        markershape = [:none :circ], w = [2 0.1],
+	                        style = [:solid :dot],markerstrokewidth= 0.1,
+	                        subplot = i,
+	                );
+	        else
+	                plot!(1:h,data, label=["Global Shock" "Non-fun ECX"],
+	                        color= [:teal :darkgoldenrod], markersize = 3.5,
+	                        markershape = [:none :circ ], w = [2 0.1],
+	                        style = [:solid :dot],markerstrokewidth= 0.1,
+	                        subplot=i,
+	                );
+	        end
+	end
+	savefig(name);
+end
+
+function myplot(data,h,mylabel)
+	p1 = plot(1:h,data,
+        	label=mylabel, color= [:red :slateblue4 :teal :darkgoldenrod],
+        	markersize = 3.5, markershape = [:none :none :x :circ],
+        	w = [2 2 0.1 0.1], style = [:solid :dash :dot :dot],
+        	markerstrokewidth= 0.1
+        );
+	return p1;
+end
