@@ -61,5 +61,38 @@ dcx = (IrfGS = GScat(inp3,quint), FevGS = GScat(inp4,quint), IrfNF = GScat(inp7,
 inp1 = nothing; inp2 = nothing; inp3 = nothing; inp4 = nothing;
 inp5 = nothing; inp6 = nothing; inp7 = nothing; inp8 = nothing;
 
-GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "Groups");
-GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "Groups");
+GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
+GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
+
+GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "World", varI=1, varF=3);
+GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "World", varI=1, varF=3);
+
+GStoWorld = cat(ecx.FevGS.Qntls[2][1:3,:],dcx.FevGS.Qntls[2][1:3,:], dims=3);
+NFtoWorld = cat(ecx.FevNF.Qntls[2][1:3,:],dcx.FevNF.Qntls[2][1:3,:], dims=3);
+
+
+p1 = plot(1:h,[GStoWorld[1,:,:]  NFtoWorld[1,:,:]],
+        label="",
+        color= [:red colist[2] colist[3] colist[4]],
+        markersize = 3.5, markershape = [:none :none :x :circ],
+        w = [2 2 0.1 0.1], style = [:solid :dash :dot :dot],
+        markerstrokewidth= 0.1,
+        );
+
+p2 = plot(1:h,[GStoWorld[2,:,:]  NFtoWorld[2,:,:]],
+        label=["Global Shock ECX" "Global Shock DCX" "Non-fun ECX" "Non-fun DCX"],
+        color= [:red colist[2] colist[3] colist[4]],
+        markersize = 5, markershape = [:none :none :x :circ],
+        w = [2 2 1 1], style = [:solid :dash :dash :dash],
+        markerstrokewidth= 0.1,
+        );
+        
+p3 = plot(1:h,[GStoWorld[3,:,:]  NFtoWorld[3,:,:]],
+        label="",
+        color= [:red colist[2] colist[3] colist[4]],
+        markersize = 3.5, markershape = [:none :none :x :circ],
+        w = [2 2 0.1 0.1], style = [:solid :dash :dot :dot],
+        markerstrokewidth= 0.1,
+        );
+plot(p1,p2,p3, layout=(1,3),size=(1200,400),title =["Global Output" "Commodity Price" "BAA spread"]);
+savefig(".//Figures//World//Comparison.png");
