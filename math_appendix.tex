@@ -3,23 +3,18 @@
 \usepackage[left=3cm,right=3cm, top=3cm]{geometry}
 
 \usepackage{enumerate}
-\usepackage{amsmath}                                       % 
-\usepackage{amsthm}                                        % 
-\usepackage{amssymb}                                       % 
+\usepackage{amsmath}                                       %
+\usepackage{amsthm}                                        %
+\usepackage{amssymb}                                       %
 \usepackage[english]{babel}  % Caracteres en ESPAÑOL
 \usepackage[utf8]{inputenc}
 \usepackage{authblk}
-%\usepackage{lastpage}
 \usepackage{graphicx}
-%\usepackage{authblk}
-%\setlength{\parindent}{0pt}
 \usepackage{fancyhdr}
 
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[CE,CO]{}
-%\fancyfoot[RE,LO]{Banco Central de Reserva del Perú}
-%\fancyfoot[LE,RO]{\thepage/\pageref{LastPage} }
 
 \renewcommand{\headrulewidth}{0pt}
 \renewcommand{\footrulewidth}{0pt}
@@ -32,7 +27,7 @@
 
 
 \begin{document}
-	
+
 \maketitle
 
 \section{The Uhlig's procedure}
@@ -41,27 +36,27 @@ In this section as an introduction to the global optimism identification we pres
  To make easier the algebra, we assume a VAR with N variables ( $n^*$ external variables, and $n$ domestic variables),an exogenous block, and 1 lag. Its reduce form is:
 	\begin{equation}
 	   \begin{aligned}
-	     \left[ \begin{array}{c}  y^{(e)}_t  \\ y^{(d)}_t \end{array} \right] 
+	     \left[ \begin{array}{c}  y^{(e)}_t  \\ y^{(d)}_t \end{array} \right]
 	    =
-      	\left[ \begin{array}{cc}  F_{ee}^{(1)} & 0 \\ F_{de}^{(1)} & F_{dd}^{(1)} \end{array} \right] 
-		\left[ \begin{array}{c}  y^{(e)}_{t-1}  \\ y^{(d)}_{t-1}  \end{array} \right] 
+      	\left[ \begin{array}{cc}  F_{ee}^{(1)} & 0 \\ F_{de}^{(1)} & F_{dd}^{(1)} \end{array} \right]
+		\left[ \begin{array}{c}  y^{(e)}_{t-1}  \\ y^{(d)}_{t-1}  \end{array} \right]
 	 	+
-    	\left[ \begin{array}{c}  u^e_{t}  \\ u^d_{t}  \end{array} \right] 
+    	\left[ \begin{array}{c}  u^e_{t}  \\ u^d_{t}  \end{array} \right]
 	  \end{aligned}
 	\end{equation} \\
 	The reduced errors, $u^e_{t}$ and $u^d_{t}$ are normally distributed with a variance-covariance matrix $\Sigma$. \\
 	The respective \textit{orthogonalized} representation of the last system is:
 	\begin{equation}
 	   \begin{aligned}
-	     \left[ \begin{array}{c}  y^{(e)}_t  \\ y^{(d)}_t \end{array} \right] 
+	     \left[ \begin{array}{c}  y^{(e)}_t  \\ y^{(d)}_t \end{array} \right]
 	    & =
-		\left[ \begin{array}{cc}  F_{ee}^{(1)} & 0 \\ F_{de}^{(1)} & F_{dd}^{(1)} \end{array} \right] 
-		\left[ \begin{array}{c}  y^{(e)}_{t-1}  \\ y^{(d)}_{t-1}  \end{array} \right] 
+		\left[ \begin{array}{cc}  F_{ee}^{(1)} & 0 \\ F_{de}^{(1)} & F_{dd}^{(1)} \end{array} \right]
+		\left[ \begin{array}{c}  y^{(e)}_{t-1}  \\ y^{(d)}_{t-1}  \end{array} \right]
 	 	+
     	\left[ \begin{array}{cc}  C_{ee}^{(1)} & 0 \\ C_{de}^{(1)} & C_{dd}^{(1)} \end{array} \right]  *\left[ \begin{array}{c}  \epsilon^e_{t}  \\ \epsilon^d_{t}  \end{array} \right]  \\
 	   Y_t & = F Y_{t-1} + C E_t
 	\end{aligned}
-	\end{equation} \\	
+	\end{equation} \\
 Both, $\epsilon^e_{t}$ and $\epsilon^d_{t}$ are \textit{orthogonal} errors distributed as a multivariate normal with mean 0 and a variance-covariance matrix I. Matrix C satisfies the restriction $CC' = \Sigma$, for convenience the matrix C could be obtained from a Cholesky decomposition. \\
 One useful post-estimation tool of VAR models is the forecast error variance decomposition (FEVD), which is obtained following next step. The forecast error will be:
 \begin{equation*}
@@ -97,9 +92,9 @@ S(\underline{\tau},\overline{\tau}|j) =  \sum_{h = \underline{\tau}}^{\overline{
 The goal in Uhlig's problem is maximizing the contribution of a $j$ structural shock in the accumulated forecast variance of a external variable $k$, then we need to extract the $kxk$ position of $S(\underline{\tau},\overline{\tau}|j)$. We can write the problem as:
 \begin{equation}\label{eq:n1}
 \begin{aligned}
-& \gamma^* &= \underset{\gamma}{\text{argmax}} 
+& \gamma^* &= \underset{\gamma}{\text{argmax}}
 & \left(\sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h R_{i}\gamma \gamma' R'_{i} \right)_{kk}\\
-& \text{s.t.} 
+& \text{s.t.}
 &  & \gamma' \gamma = 1 \\
 &  & & \gamma(z)  = 0 \quad \forall \ z>n^*
 \end{aligned}
@@ -118,7 +113,7 @@ A way to make easier (\ref{eq:n1}) is defining a matrix $G_{NxN}$ of zeros with 
 It is easy to verify that $(G R_{i})'(G R_{i}) = R^{'(k)}_i*R^{(k)}_i$, where $R^{(k)}$ represents the k-row of matrix $R_i$. On the other hand. the above equation can be re-expressing as:
 \begin{equation*}
 \begin{aligned}
-\gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  (G R_{i})'(G R_{i}) \right) \gamma &= \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  R^{'(k)}_i R^{(k)}_i \right) \gamma \\ 
+\gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  (G R_{i})'(G R_{i}) \right) \gamma &= \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  R^{'(k)}_i R^{(k)}_i \right) \gamma \\
 &= \gamma' \underbrace{\left(\sum_{i=0}^H (\overline{\tau}+1-max(\underline{\tau},i)) R^{'(k)}_iR^{(k)}_i \right)}_{\Lambda} \gamma
 \end{aligned}
 \end{equation*}
@@ -127,7 +122,7 @@ Finally, the Uhlig's problem is:
 \begin{aligned}
 & \gamma^* &= \underset{\gamma}{\text{argmax}}  \quad
 & \gamma' \Lambda  \gamma \\
-& \text{s.t.} 
+& \text{s.t.}
 &  & \gamma' \gamma = 1 \\
 &  & & \gamma(z)  = 0 \quad \forall \ z>n^*
 \end{aligned}
@@ -135,12 +130,12 @@ Finally, the Uhlig's problem is:
 After plant the Lagrangian it is easy to see that the solution is similar to a eigenvalue equation,  therefore we need to find the eigenvector related to the maximum eigenvalue of $\Lambda^*$ which is a submatrix of $\Lambda$ that includes the first $n*$ rows and columns. \\
 It is easy to see that this expression is valid for both, a period of truncation or just a point of truncation. For the later, we have to define $\underline{\tau} = \overline{\tau}$ turning $\Lambda$ into:
 \begin{equation*}
-\Lambda = \sum_{i=0}^{\overline{\tau}} R^{'(k)}_iR^{(k)}_i 
+\Lambda = \sum_{i=0}^{\overline{\tau}} R^{'(k)}_iR^{(k)}_i
 \end{equation*}
 Regarding the second restriction, we expand the expression $\gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  R_{i}^{'(k)}R_{i}^{(k)} \right) \gamma$, without the sum operator, and considering the fact the each k-variable is an external variable:
 \begin{equation*}
 \begin{aligned}
-R^{'(k)}_i\gamma' \gamma R_i^{(k)} &= \left[ \begin{array}{c}  C_{ee}^{'(i)}  \\ 0 \end{array} \right] \left[ \begin{array}{cc}  \gamma'_e & \gamma'_d  \end{array} \right] \left[ \begin{array}{c}  \gamma_e  \\ \gamma_d  \end{array} \right] 
+R^{'(k)}_i\gamma' \gamma R_i^{(k)} &= \left[ \begin{array}{c}  C_{ee}^{'(i)}  \\ 0 \end{array} \right] \left[ \begin{array}{cc}  \gamma'_e & \gamma'_d  \end{array} \right] \left[ \begin{array}{c}  \gamma_e  \\ \gamma_d  \end{array} \right]
 \left[ \begin{array}{cc}  C_{ee}^{(i)} &  0 \end{array} \right] \\
  &= \left[ \begin{array}{cc} C^{'(i)}_{ee}\gamma'_e & C^{'(i)}_{ee}\gamma'_d  \\ 0 & 0 \end{array} \right]
  \left[ \begin{array}{cc} \gamma_e C^{(i)}_{ee} & 0  \\ \gamma_d C^{(i)}_{ee} & 0 \end{array} \right] \\
@@ -148,42 +143,42 @@ R^{'(k)}_i\gamma' \gamma R_i^{(k)} &= \left[ \begin{array}{c}  C_{ee}^{'(i)}  \\
 \end{aligned}
 \end{equation*}
 It is obvious that the previous matrix has a reduce rank ($n^*$), so we need to include $n$ additional restriction over $\gamma$. In this way, a valid restriction is consider $\gamma_d equal$ as a zero vector. Therefore, these restrictions allow us to achieve a exact identification, and the relevant matrix to solve the problem, will be the sub-matrix of the first $n^*$ rows and columns.
-\clearpage  
+\clearpage
 \section{The Global Optimism methodology}
 Since the work of Uhlig (2003) medium run identification has been used to identify effects of productivity and recently in anticipated shocks. This methodology finds an identification vector ($\gamma$) that allows to extract a structural shock with a maximum participation in fluctuations over a period $[\underline{\tau}:\overline{\tau}]$ of an objective variable. \\
 We extend this methodology to obtain a vector $\gamma$ which maps structural shocks with maximal participation in N variables fluctuations (in this case, we consider external variable). \\
-Defining $S^{i}(\underline{\tau},\overline{\tau}|j)$ the forecast variance of the i-variable explained by the $j$ structural shock over the span $[\underline{\tau}:\overline{\tau}]$ we can modify the maximization problem of Uhlig as: 
+Defining $S^{i}(\underline{\tau},\overline{\tau}|j)$ the forecast variance of the i-variable explained by the $j$ structural shock over the span $[\underline{\tau}:\overline{\tau}]$ we can modify the maximization problem of Uhlig as:
 \begin{equation*}
 \begin{aligned}
 & \gamma^* &= \underset{\gamma}{\text{argmax}}  \quad
 &  \sum_i^{n^*}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})} \\
-& \text{s.t.} 
+& \text{s.t.}
 &  & \gamma' \gamma = 1 \\
 &  & & \gamma(z)  = 0 \quad \forall \ z>n^*
 \end{aligned}
 \end{equation*}
 Clearly, our objective is to find a identification vector with a maximal joint participation  in the forecast variance of all the $N^*$ external variables. It can be seem as recovering the underlying driver of the global economy, hence we call it as the global optimism strategy.\\
 The first restriction $\gamma' \gamma = 1$ is an orthogonality condition to ensure that new identification will be observationally equivalent to the original estimation. The second restriction is made to identify the exogenous block. In contrast with Barsky \& Sims (2011) this condition does not involve a restriction about the contemporaneous effect of anticipated shock over real variables, instead it implies that external variable are the sources of their forecast error variance.\\
-Rewriting the problem: 
+Rewriting the problem:
 \begin{equation*}
 \begin{aligned}
-\sum_i^{n^*}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})} 
- &=  \sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})} 
+\sum_i^{n^*}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
+ &=  \sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
 \end{aligned}
 \end{equation*}
 Finding the common denominator:
 \begin{equation*}
 \begin{aligned}
-\sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})} 
-&= 
+\sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
+&=
 \frac{\sum_i^{n^*} \left( \prod_{j=1,j\neq i}^{n^*} S^{i}(\underline{\tau},\overline{\tau})\right) \left( \gamma' \Lambda^{(i)} \gamma \right)}{\prod_i^{n^*} S^{i}(\underline{\tau},\overline{\tau})}
 \end{aligned}
 \end{equation*}
 We realize that $\gamma$ are independent of the sum, and since the denominator is common we can retire it form the maximization.
 \begin{equation*}
 \begin{aligned}
-\sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})} 
-& \propto 
+\sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
+& \propto
 \gamma' \left( \sum_i^{n^*} \left( \prod_{j=1,j\neq i}^{n^*}  S^{i}(\underline{\tau},\overline{\tau})\right) \Lambda^{(i)} \right) \gamma = \gamma' \xi  \gamma
 \end{aligned}
 \end{equation*}
@@ -203,100 +198,50 @@ In order to identify a non-fundamental shock, which is defined as an innovation 
 We define $\Lambda^{(i)}$ as the accumulated FEV matrix of an $i$ variable. Then, the system to solve is:
 \begin{equation*}
 \begin{aligned}
-q^*_k =  & \quad \underset{q_k}{\text{argmax}}
-& & q'_k \Lambda^{(i)} q_k \\
+\Psi* =  & \quad \underset{\Psi}{\text{argmax}}
+& & \Psi' \Lambda^{(i)} \Psi \\
 & \text{s.t.}
-& & q'_k q_k = 1\\
-& & & q'_k \gamma = 0 \\
-& & & q'_k(z) = 0 \ \forall \ z > n^*
+& & \Psi' \Psi = 1\\
+& & & \Psi'\gamma = 0 \\
+& & & \Psi'(z) = 0 \ \forall \ z > n^*
 \end{aligned}
 \end{equation*}
-The new restriction $q'_k \gamma = 0$ is imposed to ensure that the second identification vector will be orthogonal to the GOS. \\ 
-The key to solve it is to realize that any linear combination of excluded eigenvectors of $\xi$ fulfils the orthogonality condition. So we can rewrite $q_k = Q^{(2)}a$, with $Q^{(2)}$ a matrix of size $n^*$ x $n^*-1$ composed of discarded eigenvectors of $\xi$ and $a$ a vector of weights. \\
-Re-expressing the system:
+The new restriction $\Psi' \gamma = 0$ is imposed to ensure that the second identification vector will be orthogonal to the global shock.\\
+Lets work with the $n*$ (since the rest are 0), the second condition implies that:
+\begin{align*}
+	\begin{bmatrix}
+		\psi_1 & \psi_2 & ... &\psi_n
+	\end{bmatrix}
+	\begin{bmatrix}
+		\gamma_1 \\ \gamma_2 \\ \vdots \\ \gamma_n
+	\end{bmatrix} = 0 \\
+	\psi_1 = -\frac{\sum_{k=i}^{n}\psi_i\gamma_i}{\gamma_1}
+\end{align*}
+Hence, we can rewrite the vector $\Psi$ as
 \begin{equation*}
-\begin{aligned}
-q^*_k =  & \quad \underset{q_k}{\text{argmax}}
-& & a' Q^{(2)'} \Lambda^{(i)} Q^{(2)} a \\
-& \text{s.t.}
-& & \sum a(i) = 1
-\end{aligned}
+	\Psi = \psi_2 	\begin{bmatrix}
+						-\frac{\gamma_2}{\gamma_1} \\ 1 \\ 0 \\ \vdots \\ 0
+					\end{bmatrix}
+	+ ... + \psi_n
+	\begin{bmatrix}
+					-\frac{\gamma_n}{\gamma_1} \\ 0 \\ 0 \\ \vdots \\ 1
+				\end{bmatrix}
+				\rightarrow
+	\begin{bmatrix}\psi_2 & ...&\psi_n\end{bmatrix}
+	\begin{bmatrix} \begin{matrix} -\frac{\gamma_2}{\gamma_1}\\ \vdots \\ -\frac{\gamma_n}{\gamma_1}\end{matrix} & I \end{bmatrix} = \varphi'\Gamma'
 \end{equation*}
-Expanding $ a' Q^{(2)'} \Lambda^{(i)} Q^{(2)} a$ :
+From the first constraint:
+\begin{align*}
+	\varphi'\Gamma'\Gamma \varphi &= 1 \\
+	\varphi' B \varphi &= 1
+\end{align*}
+From the lagrangian
 \begin{equation*}
-\begin{aligned}
-a' Q^{(2)'} \Lambda^{(i)} Q^{(2)} a &= a' \Psi a \\
-&=  [a_1 \ a_2  \ a_3 \ ... \ a_{n^*-1}] 
-\left[\begin{array}{ccc} \psi_{11} & \hdots & \psi_{1,n^*-1}  \\ \vdots & \ddots & \vdots \\ \psi_{n^*-1,1} & \hdots & \psi_{n^*-1,n^*-1} \end{array} \right]
-\left[\begin{matrix} a_1 \\ a_2 \\ a_3 \\ \vdots \\ a_{n^*-1} \end{matrix} \right] \\
-&=  a_1 \psi_{11} a_1 + a_2 \psi_{21} a_1 + + a_{(n^*-1)} \psi_{(n^*-1,1)} a_1+a_1 \psi_{21} a_1+ ... +a_1 \psi_{(n^*-1,1)} a_1 + ...
-\end{aligned}
+	\mathcal{L} = \varphi\Gamma'\Lambda^{(i)}\Gamma\varphi + \lambda(1-\varphi B \Psi_{-} ) = \varphi\Lambda_{\Gamma}\varphi + \lambda(1-\varphi' B \varphi )
 \end{equation*}
-The respective Lagrangian is:
+with the FOC:
 \begin{equation*}
-\begin{aligned}
- \mathcal{L} = & a_1 \psi_{11} a_1 + a_2 \psi_{21} a_1 + + a_{(n^*-1)} \psi_{(n^*-1,1)} a_1+a_1 \psi_{21} a_1+ ... +a_1 \psi_{(n^*-1,1)} a_1 + ... \\ & + \lambda (1-a_1-a_2 - ...)
-\end{aligned}
+	\Lambda_{\Gamma}*\varphi = \lambda B \varphi
 \end{equation*}
-The first order conditions are:
-\begin{equation*}
-\begin{aligned}
-\frac{\partial \mathcal{L}}{\partial a_1} &= a_1 (\psi_{11}+ \psi_{21} + ... + \psi_{(n^*-1,1)})+a_2 \psi_{21}+ ... + a_{(n-1)} \psi_{(n-1,1)}- \lambda=0 \\
-\frac{\partial \mathcal{L}}{\partial a_2} &= a_2 (\psi_{12}+\psi_{22}+...+\psi_{(n-1,2))}+a_1 \psi_{12}+...+a_{(n-1)} \psi_{(n-1,2)}-\lambda=0 \\
-\vdots \\
-\frac{\partial \mathcal{L}}{\partial a_{n^*-1}} &= a_{(n-1)} (\psi_{(1,n-1 )}+\psi_{(2,n-1)}+ ... +\psi_{(n-1,n-1))}+a_1 \psi_{(1,n-1)}+...+a_{(n-2)} \psi_{(n-2,n-1)}-\lambda=0 \\
-\frac{\partial \mathcal{L}}{\partial \lambda}   &=  1-a_1-a_2-...-a_{(n-1)}=0\\
-\end{aligned}
-\end{equation*}
-An equivalent system is:
-\begin{equation*}
-\begin{aligned}
-\frac{\partial \mathcal{L}}{\partial a_1} &= a_1 c_1+a_2 \psi_{21}+...+a_{(n-1)} \psi_{(n-1,1)}-\lambda=0 \\
-\frac{\partial \mathcal{L}}{\partial a_2} &= a_1 \psi_{12} +a_2 c_2+ ...+a_{(n-1)} \psi_{(n-1,2)}-\lambda=0 \\
-\vdots \\
-\frac{\partial \mathcal{L}}{\partial a_{n^*-1}} &= a_1 \psi_{(1,n-1)}+a_2 \psi_{(2,n-1)}+...+a_{(n-1)} c_{(n-1)}-\lambda=0 \\
-\frac{\partial \mathcal{L}}{\partial \lambda}   &=  1-a_1-a_2-…-a_{(n-1)}=0 \\
-\end{aligned}
-\end{equation*}
-To solve it, we can subtract successively equation (i) - (i-1) forming:
-\begin{equation*}
-\begin{aligned}
-a_1 (c_1-\psi_{12} )+a_2(\psi_{21}-c_2)+...+a_{(n-1)} (\psi_{(n-1,1)}-\psi_{(n-1,2)})=0 \\
-a_1 (\psi_{12}-\psi_{13} )+a_2 (c_2-\psi_{23})+...+a_{(n-1)} (\psi_{(n-1,2)}-\psi_{(n-1,3)})=0 \\
-\vdots \\
-a_1 (\psi_{(1,n-2)}-\psi_{(1,n-1)} )+a_2 (\psi_{(2,n-2)}-\psi_{(2,n-1 )})+...+a_{(n-1)} (\psi_{(n-1,n-1)}-c_{(n-1)})=0 \\
-a_1+a_2+...+a_{(n-1)}=1 
-\end{aligned}
-\end{equation*}
-Or:
-\begin{equation*}
-\begin{aligned}
-F * \left[\begin{matrix} a_1 \\ a_2 \\ a_3 \\ \vdots \\ a_{n^*-1} \end{matrix} \right] &=  \left[\begin{matrix} 0 \\ 0 \\ 0\\ \vdots \\ 1 \end{matrix} \right] \\
-a &=  F^{-1} *\left[\begin{matrix} 0 \\ 0 \\ 0\\ \vdots \\ 1 \end{matrix} \right] 
-\end{aligned}
-\end{equation*}
-Then,
-\begin{equation*}
-q_k = Q^{(2)}*a
-\end{equation*}
-And finally:
-\begin{equation*}
-q_k^* = \frac{q_k}{|| q_k ||}
-\end{equation*}
-Since we define an external block composed only for 3 variables, identification of a non-fundamental shock is easier,and based on a simple searching algorithm, following describe:
-\begin{equation*}
-\begin{aligned}
-&a = [0.000 : 0.001: 1] \\
-&s = nan(numel(a),1) \\
-  & for \quad i  =  1:numel(a) \\
-  & \quad h = a(i)* \lambda_2 + (1-a(2)*\lambda_3 \\
-  & \quad h = h/sqrt(h'*h) \\
-  & \quad s(i) = h'*\Lambda^{(ctot)}*h \\
-  & end \\
-&pond = a(find(s==max(s)))\\
-&pond = pond(1); \\
-&qk   = pond * \lambda_2 + (1-pond)* \lambda_3; 
-\end{aligned}
-\end{equation*}
-
+Which is a generalized eigenvalue-eigenvector problem. Therefore, the solution will be the vector associated with the larger generalized eigenvector.
 \end{document}
