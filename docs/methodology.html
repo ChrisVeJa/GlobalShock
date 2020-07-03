@@ -10,6 +10,8 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -35,8 +37,6 @@
 										<h1>Global shock identification</h1>
 									</header>
 
-									<span class="image main"><img src="images/pic11.jpg" alt="" /></span>
-
 									<p> It is plausible to think that global variables respond to an underlying and deeper 
 									variable (or state of global economy)? or are the commodities movements really structural shocks? 
 									Regards those, literature has not a unique response. Many models and researchers treat commodity prices 
@@ -53,23 +53,46 @@
 									effective expected value. Nevertheless, when we talk about commodities news shocks, the common
 									understanding leads to think that they are new shocks that have their source in commodity prices, or at least are
 									related mainly with them</p>
-									<hr class="major" />
-
-									<h2>Interdum sed dapibus</h2>
-									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit.</p>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
 
 									<hr class="major" />
-
-									<h2>Magna etiam veroeros</h2>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
-									<p>Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fersapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit tristique lorem ipsum dolor.</p>
-
+									<h2>The model</h2>
+									<p> Let \(y_t^f\) and \(y_t\) be vectors of foreign and domestic variables, respectively. The reduce form for the two blocks VAR is 
+										$$ 
+										\begin{bmatrix} y^{f}_t \\ y_t \end{bmatrix}
+										=
+										\begin{bmatrix} B_{11,1} & 0 \\ B_{21,1} & B_{22,1} \end{bmatrix}
+										\begin{bmatrix} y^{f}_{t-1} \\ y_{t-1} \end{bmatrix}
+										+
+										\begin{bmatrix} B_{11,2} & 0 \\ B_{21,2} & B_{22,2} \end{bmatrix}
+										\begin{bmatrix} y^{f}_{t-2} \\ y_{t-2} \end{bmatrix}
+										+
+										\begin{bmatrix} \epsilon^f_{t} \\ \epsilon_{t} \end{bmatrix}
+										$$
+									</p>
 									<hr class="major" />
-
-									<h2>Lorem aliquam bibendum</h2>
-									<p>Donec eget ex magna. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque venenatis dolor imperdiet dolor mattis sagittis. Praesent rutrum sem diam, vitae egestas enim auctor sit amet. Pellentesque leo mauris, consectetur id ipsum sit amet, fergiat. Pellentesque in mi eu massa lacinia malesuada et a elit. Donec urna ex, lacinia in purus ac, pretium pulvinar mauris. Curabitur sapien risus, commodo eget turpis at, elementum convallis elit. Pellentesque enim turpis, hendrerit.</p>
-									<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis dapibus rutrum facilisis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam tristique libero eu nibh porttitor fermentum. Nullam venenatis erat id vehicula viverra. Nunc ultrices eros ut ultricies condimentum. Mauris risus lacus, blandit sit amet venenatis non, bibendum vitae dolor. Nunc lorem mauris, fringilla in aliquam at, euismod in lectus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. In non lorem sit amet elit placerat maximus. Pellentesque aliquam maximus risus, vel sed vehicula.</p>
+									<h2>Identification of Global Shocks</h2>
+									<p>
+										$$
+											\begin{aligned}
+											& \underset{q_j}{\text{max}}
+											& & \sum_{i \, \in \, y^f}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
+											\\
+											& \text{s.t.}
+											& & \gamma' * \gamma = 1 \\
+											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+											\end{aligned}
+										$$
+									which can be re-expresed as:
+										$$
+											\begin{aligned}
+											& \underset{\gamma}{\text{max}}
+											& & \gamma' \xi \gamma \\
+											& \text{s.t.}
+											& & \gamma' * \gamma = 1\\
+											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+											\end{aligned}
+										$$
+									</p>
 
 								</section>
 

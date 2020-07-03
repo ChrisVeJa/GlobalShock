@@ -10,6 +10,9 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+		<script type="text/javascript" id="MathJax-script" async
+			src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 	</head>
 	<body class="is-preload">
 
@@ -31,6 +34,29 @@
 
 							<!-- Content -->
 								<section>
+									<header class="main">
+										<h1>Non-Fundamental commodity prices shocks</h1>
+									</header>
+									<header class="main">
+										<h1>Identification</h1>
+									</header>
+									<p> 
+										$$
+											\begin{aligned}
+											\Psi* = & \quad \underset{\Psi}{\text{argmax}}
+											& & \Psi' \Lambda^{(i)} \Psi \\
+											& \text{s.t.}
+											& & \Psi' \Psi = 1\\
+											& & & \Psi'\gamma = 0 \\
+											& & & \Psi'(z) = 0 \ \forall \ z > n^*
+											\end{aligned}
+										$$
+										The solution to this system takes the form:
+										$$
+											\Lambda_{\Gamma}*\varphi = \lambda B \varphi
+										$$
+										which is a generalized eigenvalue-eigenvector problem. Hence, the identified response vector is the associated with the maximum generalized eigenvalue. 
+									</p>
 									<header class="main">
 										<h1>Emerging Commodity exporters</h1>
 									</header>
