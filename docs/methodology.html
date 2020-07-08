@@ -37,23 +37,27 @@
 										<h1>Global shock identification</h1>
 									</header>
 
-									<p> It is plausible to think that global variables respond to an underlying and deeper 
-									variable (or state of global economy)? or are the commodities movements really structural shocks? 
-									Regards those, literature has not a unique response. Many models and researchers treat commodity prices 
-									as exogenous variables for small open economies. The last could be consider as a weak assumption. 
-									On the other hand, since medium run identification was proposed and developed by Uhlig(2003) it has
-									been used to identify anticipated shocks over a specific variable (fiscal policy, productivity, etc). 
-									In this sense, ZPV application surges like a natural, and very intuitively response to SGU results. 
-									The anticipated fraction of the augmented-news shock over terms of trade (or commodities prices) could 
-									reconcile the conclusion of SGU with the broadly idea about the importance of commodities for small open economies. 
-									However, what is a news shock? what is exactly a commodity news shock? The former was responded by XXX, 
-									\textit{``a news shock should be understand as any shock that changes the current information set of the 
-									implicit households in our models"}. On this way, we could consider a commodity news shock as any change in 
-									our beliefs that causes differences between that expected value based on a forward looking behavior and the 
-									effective expected value. Nevertheless, when we talk about commodities news shocks, the common
-									understanding leads to think that they are new shocks that have their source in commodity prices, or at least are
-									related mainly with them</p>
+									<p> In the previous section I pointed out the tight relationship between <i> "news-augmented"</i> commodities
+										price shocks and global shocks, and that we need to test if both generates a similar patron and/or if are 
+										the same. To achieve this objective, we should find a identification strategy that allows to clearly 
+										isolated global shocks. In that line, I first define what is understood as a <b> global-shock</b> for the
+										scope of this paper
+										<dl>
+											<dt>
+												<b>
+													<strong> Definition 1:</strong> 
+													<i>
+														Let \(y^f\) being the observables that compound the foreign economy. A global shock is an 
+														underlying innovation related to persistent conditions that induces an instantaneous 
+														co-movement in every variable part of the external block and is based on primitive drivers.
+													</i>
+												</b>
+											</dt>
+										</dl>
+										This definition,
+									</p>
 
+									
 									<hr class="major" />
 									<h2>The model</h2>
 									<p> Let \(y_t^f\) and \(y_t\) be vectors of foreign and domestic variables, respectively. The reduce form for the two blocks VAR is 
@@ -70,6 +74,11 @@
 										$$
 									</p>
 									<hr class="major" />
+									<h2>Estimation Strategy</h2>
+									<p>
+										As
+									</p>
+									<hr class="major" />
 									<h2>Identification of Global Shocks</h2>
 									<p>
 										$$
@@ -78,7 +87,7 @@
 											& & \sum_{i \, \in \, y^f}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
 											\\
 											& \text{s.t.}
-											& & \gamma' * \gamma = 1 \\
+											& & \gamma' \gamma = 1 \\
 											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
 											\end{aligned}
 										$$
@@ -88,11 +97,13 @@
 											& \underset{\gamma}{\text{max}}
 											& & \gamma' \xi \gamma \\
 											& \text{s.t.}
-											& & \gamma' * \gamma = 1\\
+											& & \gamma' \gamma = 1\\
 											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
 											\end{aligned}
 										$$
 									</p>
+									<hr class="major" />
+									<h2>Data</h2>
 									<p>
 									<ul class="actions">
 										<li><a href="results.html" class="button">Results</a></li>
@@ -140,7 +151,10 @@
 									<div class="mini-posts">
 										<article>
 											<span class="image"><img src="images/mot1.png" alt="" /></span>
-											<p>The current literature ....</p>
+											<p>
+												A common mistake in identification is labeling, it means
+												gives a name to a shock which could cause misleads in readers.
+											</p>
 										</article>
 									</div>
 									<ul class="actions">
