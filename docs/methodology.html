@@ -48,18 +48,32 @@
 													<strong> Definition 1:</strong> 
 													<i>
 														Let \(y^f\) being the observables that compound the foreign economy. A global shock is an 
-														underlying innovation related to persistent conditions that induces an instantaneous 
-														co-movement in every variable part of the external block and is based on primitive drivers.
+														underlying innovation related to primitive drivers that induces a persistent co-movement 
+														in every variable that belong to this block.
 													</i>
 												</b>
 											</dt>
 										</dl>
-										This definition,
+										This definition implies certain characteristics when we talk about a <b> global -shocks</b>:
+										<ol>
+											<li>A global shock is defined in the whole foreign economy. Then, any identification strategy should take
+												into consideration that theoretically domestic variables are not are reliable source for pinning down. 
+											</li>
+											<li>The nature of the shock is not predefined, without any narrating is not possible define them as demand, 
+												supply, technology or another. In this sense, I have to recognize the possibility that we are still 
+												accounting some class of reduced shock but at the same time it allow us to have more flexibility.
+											</li>
+											<li>Being related to "primitives" although is a vague statement, for the scope of the paper entails that 
+												these innovations are a main driver in the external-block variability
+											</li>
+										</ol>
 									</p>
 
-									
+									<p>
+										Here talk about how it is related to current literature and approach for global trends/shocks/ similar
+									</p>
 									<hr class="major" />
-									<h2>The model</h2>
+									<h2>Estimation Strategy</h2>
 									<p> Let \(y_t^f\) and \(y_t\) be vectors of foreign and domestic variables, respectively. The reduce form for the two blocks VAR is 
 										$$ 
 										\begin{bmatrix} y^{f}_t \\ y_t \end{bmatrix}
@@ -72,11 +86,19 @@
 										+
 										\begin{bmatrix} \epsilon^f_{t} \\ \epsilon_{t} \end{bmatrix}
 										$$
+										Following the standard literature I choose two lags (the AIC and SIC are reported in the appendix), restricting 
+										any parameters associated with an effect from the small open economy to the global block, which is a condition
+										for identification since it avoids any possible feedback - and hence, power explanation. 
 									</p>
-									<hr class="major" />
-									<h2>Estimation Strategy</h2>
 									<p>
-										As
+										The estimation is made by restricted OLS to obtain a initial point for the bayesian draws. As it is common in
+										this class of modelling, I opt for a diffuse inverse-Wishart prior conditioning the selected draws for <b>B</b>
+										to be stable. It means that we are estimating a cointegrated-VAR for each country in the sample. This procedure 
+										gives similar results regards to a bootstrapping approach. The number of stationary simulations that we used is 5000
+										(larger than usual amount used) 
+									</p>
+									<p>
+										In 
 									</p>
 									<hr class="major" />
 									<h2>Identification of Global Shocks</h2>
