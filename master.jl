@@ -68,6 +68,8 @@ gd1 = gdata[end-taux+1:end,1]
 gd1 = gd1 .- mean(gd1);
 p   = plot(1:taux, umean, ribbon = (LB, UB),c = :teal, fillalpha=0.1, w = 1.5,
         fg_legend = :transparent, label = "News-augmented comm. shocks",
+        title = "Figure 2: News-augmented commodity shocks vs G20 growth" ,
+        titlefontsize = 10,xticks = (1:12:taux, gdate[end+1-taux:12:end]),
         legendfontsize=7, legend=:bottomleft)
 plot!(1:taux,gd1, c=:red, w = 1.25, alpha = 0.85, label= "G20 output")
 savefig(".//Figures//intro2.svg")
