@@ -110,41 +110,70 @@
 									<p> The standard treatment to report average measure in aggregate groups take the IRFs and FEVD results for every country specific
 										VARs and then calculate their average and construct its confidence band based on a combination
 										of country-specific variance. In contrast, I collect all the realization for IRFs and FEVDs, reporting 
-										their median and quantiles. It has two advantages over the common way. In one hand, reporting the median is possible which 
+										their median and percentiles. It has two advantages over the common way. In one hand, reporting the median is possible which 
 										can deal with extreme values; on the other, the confidence set are not required to be symmetric which enriches our analysis.
 									</tbody>
 									</p>
 									<hr class="major" />
 									<h2>Identification of Global Shocks</h2>
-									<p>
-										$$
-											\begin{aligned}
-											& \underset{q_j}{\text{max}}
-											& & \sum_{i \, \in \, y^f}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
-											\\
-											& \text{s.t.}
-											& & \gamma' \gamma = 1 \\
-											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
-											\end{aligned}
-										$$
-										which can be re-expresed as:
-										$$
-											\begin{aligned}
-											& \underset{\gamma}{\text{max}}
-											& & \gamma' \xi \gamma \\
-											& \text{s.t.}
-											& & \gamma' \gamma = 1\\
-											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
-											\end{aligned}
-										$$
-									</p>
-									<hr class="major" />
-									<h2>Data</h2>
-									<p>
+									As global shocks are related with persistent conditions and under the assumption
+									of forward looking households I can exploit the framework develop by Uhlig (2003),
+									by generalized it for a group of variables. 
+								</p>
+								<p> 
+									In standard models a news-shock is identified
+									as the innovation that explains at maximum the forecast error variance of an specific 
+									variable. In contrast, my generalization defines an identification vector \(\gamma\)
+									as the underlying driver with maximum participation in the future not predicted
+									movements for an entire block. In a VAR with a exogenous economy the maximization problem is:
+								</p>
+								<p> 
+									$$
+										\begin{aligned}
+										& \underset{\gamma}{\text{max}}
+										& & \sum_{i \, \in \, y^f}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
+										\\
+										& \text{s.t.}
+										& & \gamma' \gamma = 1 \\
+										& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+										\end{aligned}
+									$$
+								</p>
+								<p>
+										The objective function is the average contribution of \(\epsilon_\gamma\) on
+										the FEV, I am assuming an equal weight for each variable in the foreign
+										block but it can easily be extend to the case with different ones. While the
+										first condition is assuring a unique identified vector, the second restriction 
+										is imposed to ensure that our identified response vector has an extraneous
+										source. Since the two block VAR is based on theory, the loss of information
+										is minimal, and indeed it helps to pin down the correct structural parameters.
+								</p>
+								<p> After some algebra this problem can be reexpressed as:
+									$$
+										\begin{aligned}
+										& \underset{\gamma}{\text{max}}
+										& & \gamma' \xi \gamma \\
+										& \text{s.t.}
+										& & \gamma' \gamma = 1\\
+										& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+										\end{aligned}
+									$$
+									with \(\xi = \sum_{i\in y^f}\left(\prod_{j \in y^f_{-i}}S^{(i)}(\underline\tau, \overline \tau)\right)\Lambda^{(i)}\)
+									and its solution is the eigenvector related to the maximum eigenvalue of \(\xi\).
+								</p>
+								<p>
+									<b>Here talk about identification issues in economics ... </b>
+								</p>
+								<hr class="major" />
+								<h2>Data</h2>
+								<p>
+									
+								</p>
+								<p>
 									<ul class="actions">
 										<li><a href="results.html" class="button">Results</a></li>
 									</ul>
-									</p>
+								</p>
 								</section>
 
 						</div>
