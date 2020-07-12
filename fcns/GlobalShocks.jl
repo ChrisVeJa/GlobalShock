@@ -50,6 +50,7 @@ function GSstimation(
     Lτ = 1,
     Uτ = 5,
     quint = [0.16 0.50 0.84],
+	nonfun = true,
 )
     # --------------------------------------------------------
     # [2.1.1] VAR in reduce form
@@ -80,21 +81,15 @@ function GSstimation(
     FEVGS = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
 	IRFNF = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
     FEVNF = Array{Float64,3}(undef, m, h, nmodls) # Container for IRF of GS
-
+	U = Array{Float64,2}(undef, T, nmodls) # Identified shocks
     for i = 1:nmodls
         out0, out1, out2, ξ[:, :, i] = GSsimulation(
-            Y,
-            X,
-            B,
-            SS,
-            p,
-            Lτ,
-            Uτ;
-            Xblock = xblock,
-            nx = nx,
-            varGS = VarGS,
+            Y, X, B, SS, p, Lτ, Uτ; Xblock = xblock,
+			nx = nx, varGS = VarGS, nonfun = nonfun,
         )
         # β, Φ, Γ, ξ
+		Uaux   = out2\(E')
+		U[:,i] = vec(Uaux[1,:])
         IRF, FEV = irf_fevd(out1, out2, h, m)
         IRFGS[:, :, i] = IRF[:, 1, :]
         FEVGS[:, :, i] = FEV[:, 1, :]
@@ -142,7 +137,7 @@ function GSstimation(
         PostVAR(FEVDGSM, FEVDGSQ),
 		PostVAR(IRFNFM, IRFNFQ),
 		PostVAR(FEVDNFM, FEVDNFQ),
-    ), mytup ;
+    ), mean(U,dims=2) , mytup ;
 end
 
 # ------------------------------------------------------
@@ -160,6 +155,7 @@ function GSsimulation(
     Xblock = false,
     nx = 3,
     varGS = 1:3,
+	nonfun = true,
 )
     # --------------------------------------------------------
     # [2.2.1] Drawing βₙ
@@ -217,22 +213,23 @@ function GSsimulation(
 
     # [Step 3] Eigenvector sorted by the max eigenvalue
     ξ = eigen(Ξ).vectors[:, end:-1:1]
-    nξ = size(ξ)[1];
+
 
     # [Step 4] NON FUNDAMENTAL SHOCK
-    L   = [-ξ[2:end,1] ./ ξ[1,1] I(nξ-1)];
-    BL  = L*L';
-    BL  = Array(BL);
-    pos_tot=2;
-    Λaux= L*Λ[:,:,pos_tot]*L';
-    ψ   = eigen(Λaux, BL).vectors[:,end];
-    Ψ   = convert(Array,(ψ'*L)');
-    Ξ   = [ξ[:,1] Ψ];
-
-    # New Identification matrix
-    nsp = nullspace(Array(Ξ'))
-    ξ   = [Ξ nsp[:,1:(nξ-2)]];
-
+	if nonfun
+		nξ  = size(ξ)[1];
+	    L   = [-ξ[2:end,1] ./ ξ[1,1] I(nξ-1)];
+	    BL  = L*L';
+	    BL  = Array(BL);
+	    pos_tot=2;
+	    Λaux= L*Λ[:,:,pos_tot]*L';
+	    ψ   = eigen(Λaux, BL).vectors[:,end];
+	    Ψ   = convert(Array,(ψ'*L)');
+	    Ξ   = [ξ[:,1] Ψ];
+	    # New Identification matrix
+	    nsp = nullspace(Array(Ξ'))
+	    ξ   = [Ξ nsp[:,1:(nξ-2)]];
+	end
     # [Step 5] New Identification matrix
     if Xblock
         Γ = [C1[:, 1:nx] * ξ C1[:, nx+1:end]]
@@ -240,7 +237,7 @@ function GSsimulation(
         Γ = C1 * ξ
     end
     Γ = sign.(diag(Γ))' .* Γ  # Normalization to improve identification
-    return β, Φ, Γ, ξ
+    return β, Φ, Γ, ξ # betas, Companion Form, Identification, Eigenvectors
 end
 
 ################################################################################

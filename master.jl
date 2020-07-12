@@ -12,6 +12,17 @@ include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
 
 # ===============================================
+# [1] Introduction
+# ===============================================
+gframe  = DataFrame(XLSX.readtable("file1.xlsx", "data")...);
+gdata   = convert(Array{Float64},gframe[:,2:end]);
+gdata   = [100*gdata[2:end,1:2] - 100*gdata[1:end-1,1:2] gdata[2:end,3]]
+gdate   = convert(Array,gframe[:,1]);
+plot(gdata[:,[1,3]])
+plot!(gdata[:,2], yaxis = :right)
+
+
+# ===============================================
 # [1] Estimation by country
 # ===============================================
 df   = DataFrame(XLSX.readtable("basedato.xlsx", "data")...)
