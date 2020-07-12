@@ -10,7 +10,7 @@
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributions, Plots;
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
-
+if ~isdir(".//Figures")   mkdir("Figures") end
 # ===========================================================================
 # [1] Introduction
 # ===========================================================================
@@ -41,7 +41,8 @@ savefig(".//Figures//intro1.svg")
 CoRR = cor(gdata);
 display(CoRR)
 
-
+# --------------------------------------------------------------------------
+# [1.3 Figure 2]
 # In this part we are just interested in some graphics, then
 # I will just consider a light version of each model
 df= DataFrame(XLSX.readtable("basedato.xlsx", "data")...)
@@ -51,7 +52,7 @@ U = fill(NaN,size(df)[1],10);
 for i in 1:10
     start = 2 + 9*(i-1);
     y = convert(Array{Float64},df[:, start:start+8][completecases(df[:, start:start+8]), :]);
-    model1,Uaux, _tup1 = GlobalShock.GSstimation(y, p, h, VarGS = 2,
+    model1, Uaux, _tup1 = GlobalShock.GSstimation(y, p, h, VarGS = 2,
                         nonfun = false, nmodls = 1000,
     );
     tt = length(Uaux);
@@ -78,14 +79,18 @@ display(CoRR2)
 
 
 # ===========================================================================
-# [1] Estimation by country
+# [2] GLOBAL SHOCKS
 # ===========================================================================
 df   = DataFrame(XLSX.readtable("basedato.xlsx", "data")...)
 name = [:GSArg :GSBra :GSChl :GSCol :GSPer :GSSoA :GSAus :GSCan :GSNrw :GSNzl];
 countries = [:Argentina :Brazil :Chile :Colombia :Peru :SouthAfrica :Australia :Canada :Norway :NewZeland];
-labels = ["GDP G20" "ComPrice" "BAA spread" "GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"];
+colist  = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
+CouList = string.(name) .* ".svg";
+labels  = ["GDP G20" "ComPrice" "BAA spread" "GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"];
 p = 2;
 h = 40;
+
+# [2.1 Estimation by country]
 for i in 1:length(countries)
     model = countries[i]
     display("Global shocks: $model")
@@ -93,21 +98,10 @@ for i in 1:length(countries)
     eval(codmodel);
 end
 
-# ===========================================================================
-# [2] Reporting by country
-# ===========================================================================
-colist = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
-CouList = string.(name) .* ".svg";
 
-for x in 1:length(countries)
-    country = name[x];
-    ex= :(GSGraph($country,CouList[$x], labels, colg = colist[$x], varI=4));
-    eval(ex);
-end
 
-# ===========================================================================
-# [2] Creating groups of countries
-# ===========================================================================
+# [2.2 ] Creating groups of countries
+quint = [0.16 0.50 0.84];
 inp1 = (ExtraGSArg.irfgs, ExtraGSBra.irfgs, ExtraGSChl.irfgs, ExtraGSCol.irfgs, ExtraGSPer.irfgs, ExtraGSSoA.irfgs);
 inp2 = (ExtraGSArg.fevgs, ExtraGSBra.fevgs, ExtraGSChl.fevgs, ExtraGSCol.fevgs, ExtraGSPer.fevgs, ExtraGSSoA.fevgs);
 inp3 = (ExtraGSAus.irfgs, ExtraGSCan.irfgs, ExtraGSNrw.irfgs, ExtraGSNzl.irfgs);
@@ -116,22 +110,42 @@ inp5 = (ExtraGSArg.irfnf, ExtraGSBra.irfnf, ExtraGSChl.irfnf, ExtraGSCol.irfnf, 
 inp6 = (ExtraGSArg.fevnf, ExtraGSBra.fevnf, ExtraGSChl.fevnf, ExtraGSCol.fevnf, ExtraGSPer.fevnf, ExtraGSSoA.fevnf);
 inp7 = (ExtraGSAus.irfnf, ExtraGSCan.irfnf, ExtraGSNrw.irfnf, ExtraGSNzl.irfnf);
 inp8 = (ExtraGSAus.fevnf, ExtraGSCan.fevnf, ExtraGSNrw.fevnf, ExtraGSNzl.fevnf);
-quint = [0.16 0.50 0.84];
-
+ecx  = (IrfGS = GScat(inp1,quint), FevGS = GScat(inp2,quint), IrfNF = GScat(inp5,quint), FevNF = GScat(inp6,quint));
+dcx  = (IrfGS = GScat(inp3,quint), FevGS = GScat(inp4,quint), IrfNF = GScat(inp7,quint), FevNF = GScat(inp8,quint));
+inp1 = nothing; inp2 = nothing; inp3 = nothing; inp4 = nothing;
+inp5 = nothing; inp6 = nothing; inp7 = nothing; inp8 = nothing;
 ExtraGSArg = nothing; ExtraGSBra = nothing; ExtraGSChl = nothing; ExtraGSCol = nothing; ExtraGSPer = nothing;
 ExtraGSSoA = nothing; ExtraGSAus = nothing; ExtraGSCan = nothing; ExtraGSNrw = nothing; ExtraGSNzl = nothing;
 
-ecx = (IrfGS = GScat(inp1,quint), FevGS = GScat(inp2,quint), IrfNF = GScat(inp5,quint), FevNF = GScat(inp6,quint));
-dcx = (IrfGS = GScat(inp3,quint), FevGS = GScat(inp4,quint), IrfNF = GScat(inp7,quint), FevNF = GScat(inp8,quint));
-
-inp1 = nothing; inp2 = nothing; inp3 = nothing; inp4 = nothing;
-inp5 = nothing; inp6 = nothing; inp7 = nothing; inp8 = nothing;
+# [2.2 ] Reporting by group of country both GS and NF shocks
 
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
+
+
+
+# ===========================================================================
+# [3] Reporting results by country
+# ===========================================================================
+
+for x in 1:length(countries)
+    country = name[x];
+    ex= :(GSGraph($country,CouList[$x], labels, colg = colist[$x], varI=4));
+    eval(ex);
+end
+
+
+
+# ===========================================================================
+# [3] Comparison of shocks
+# ===========================================================================
+
+# [3.1] Impact in macro variables
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "World", varI=1, varF=3);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "World", varI=1, varF=3);
 
+
+# [3.2] Comparison
 GStoWorld = cat(ecx.FevGS.Qntls[2][1:3,:],dcx.FevGS.Qntls[2][1:3,:], dims=3);
 NFtoWorld = cat(ecx.FevNF.Qntls[2][1:3,:],dcx.FevNF.Qntls[2][1:3,:], dims=3);
 p1 = myplot([GStoWorld[1,:,:]  NFtoWorld[1,:,:]],h,"");
@@ -139,8 +153,6 @@ p2 = myplot([GStoWorld[2,:,:]  NFtoWorld[2,:,:]],h,["Global Shock ECX" "Global S
 p3 = myplot([GStoWorld[3,:,:]  NFtoWorld[3,:,:]],h,"");
 plot(p1,p2,p3, layout=(1,3),size=(1200,400),title =["Global Output" "Commodity Price" "BAA spread"]);
 savefig(".//Figures//World//Comparison.svg");
-
-
 raw = cat(ecx.IrfGS.Qntls[2][4:end,:], ecx.IrfNF.Qntls[2][4:end,:], dims=3);
 myname = ".//Figures//World//ComparisonIRFecx.svg";
 GraphAux(raw, myname);
