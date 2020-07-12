@@ -10,7 +10,7 @@ function gos_creator(df, col::Int64, name, p, h)
     tupname = Symbol.("Extra" .* string.(name));
     lines    = name[col];
     tuplines = tupname[col];
-    ex =:(($lines , $tuplines) = GlobalShock.GSstimation($y, p, h, xblock = true, nx = 3))
+    ex =:(($lines, UU , $tuplines) = GlobalShock.GSstimation($y, p, h, xblock = true, nx = 3))
     return ex
 end
 # ===============================================

@@ -97,7 +97,7 @@ end
 # [2] Reporting by country
 # ===========================================================================
 colist = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
-CouList = string.(name) .* ".png";
+CouList = string.(name) .* ".svg";
 
 for x in 1:length(countries)
     country = name[x];
@@ -127,10 +127,10 @@ dcx = (IrfGS = GScat(inp3,quint), FevGS = GScat(inp4,quint), IrfNF = GScat(inp7,
 inp1 = nothing; inp2 = nothing; inp3 = nothing; inp4 = nothing;
 inp5 = nothing; inp6 = nothing; inp7 = nothing; inp8 = nothing;
 
-GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
-GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
-GSGraph(ecx, "ECX", labels, colg = :darkgoldenrod, subdir = "World", varI=1, varF=3);
-GSGraph(dcx, "DCX", labels, colg = :darkorchid4 , subdir = "World", varI=1, varF=3);
+GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
+GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
+GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "World", varI=1, varF=3);
+GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "World", varI=1, varF=3);
 
 GStoWorld = cat(ecx.FevGS.Qntls[2][1:3,:],dcx.FevGS.Qntls[2][1:3,:], dims=3);
 NFtoWorld = cat(ecx.FevNF.Qntls[2][1:3,:],dcx.FevNF.Qntls[2][1:3,:], dims=3);
@@ -138,20 +138,20 @@ p1 = myplot([GStoWorld[1,:,:]  NFtoWorld[1,:,:]],h,"");
 p2 = myplot([GStoWorld[2,:,:]  NFtoWorld[2,:,:]],h,["Global Shock ECX" "Global Shock DCX" "Non-fun ECX" "Non-fun DCX"]);
 p3 = myplot([GStoWorld[3,:,:]  NFtoWorld[3,:,:]],h,"");
 plot(p1,p2,p3, layout=(1,3),size=(1200,400),title =["Global Output" "Commodity Price" "BAA spread"]);
-savefig(".//Figures//World//Comparison.png");
+savefig(".//Figures//World//Comparison.svg");
 
 
 raw = cat(ecx.IrfGS.Qntls[2][4:end,:], ecx.IrfNF.Qntls[2][4:end,:], dims=3);
-myname = ".//Figures//World//ComparisonIRFecx.png";
+myname = ".//Figures//World//ComparisonIRFecx.svg";
 GraphAux(raw, myname);
 raw = cat(dcx.IrfGS.Qntls[2][4:end,:], dcx.IrfNF.Qntls[2][4:end,:], dims=3);
-myname = ".//Figures//World//ComparisonIRFdcx.png";
+myname = ".//Figures//World//ComparisonIRFdcx.svg";
 GraphAux(raw, myname);
 raw = cat(ecx.FevGS.Qntls[2][4:end,:], ecx.FevNF.Qntls[2][4:end,:], dims=3);
-myname = ".//Figures//World//ComparisonFEVecx.png";
+myname = ".//Figures//World//ComparisonFEVecx.svg";
 GraphAux(raw, myname);
 raw = cat(dcx.FevGS.Qntls[2][4:end,:], dcx.FevNF.Qntls[2][4:end,:], dims=3);
-myname = ".//Figures//World//ComparisonFEVdcx.png";
+myname = ".//Figures//World//ComparisonFEVdcx.svg";
 GraphAux(raw, myname);
 
 cp(".//Figures",".//docs//images//Figures",force=true);
