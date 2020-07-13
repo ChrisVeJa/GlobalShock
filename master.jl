@@ -134,7 +134,7 @@ for x in 1:length(countries)
     ex= :(GSGraph($country,CouList[$x], labels, colg = colist[$x], varI=4));
     eval(ex);
 end
-
+GSArg.FevGS.Qntls[2][4:end,:]'
 
 
 # ===========================================================================
