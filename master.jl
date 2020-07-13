@@ -99,8 +99,6 @@ for i in 1:length(countries)
     eval(codmodel);
 end
 
-
-
 # [2.2 ] Creating groups of countries
 quint = [0.16 0.50 0.84];
 inp1 = (ExtraGSArg.irfgs, ExtraGSBra.irfgs, ExtraGSChl.irfgs, ExtraGSCol.irfgs, ExtraGSPer.irfgs, ExtraGSSoA.irfgs);
