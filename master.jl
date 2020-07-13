@@ -10,6 +10,7 @@
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributions, Plots;
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
+include(".//fcns//ToHtml.jl");
 if ~isdir(".//Figures")   mkdir("Figures") end
 # ===========================================================================
 # [1] Introduction
@@ -121,8 +122,10 @@ ExtraGSSoA = nothing; ExtraGSAus = nothing; ExtraGSCan = nothing; ExtraGSNrw = n
 
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
-ecx.FevGS.Qntls[2]
-
+ToHtml("table1.html",round.(ecx.FevGS.Qntls[2][4:end,:]', digits=2),
+        ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"]);
+ToHtml("table2.html",round.(dcx.FevGS.Qntls[2][4:end,:]', digits=2),
+        ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"]);
 
 # ===========================================================================
 # [3] Reporting results by country
