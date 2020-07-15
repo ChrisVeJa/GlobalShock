@@ -4,7 +4,7 @@
 # Any comment, doubt or suggestion just send me an email to velasqcb@bc.edu
 ################################################################################
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
-	StatsBase, Distributions, Plots, CSV;
+	StatsBase, Distributions, Plots, CSV, RCall;
 
 
 # ------------------------------------------------------------------------------
@@ -304,20 +304,49 @@ end
 
 #= ------------------------------------------------------------------------
  	[-] NATIONAL ACCOUNTS
-	https://data.imf.org/regular.aspx?key=61545852
-	https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/pbi-gasto
- ------------------------------------------------------------------------ =#
-# Argetina
-y  = DataFrame(XLSX.readdata("./Data/GDP1.xlsx", "Quarterly!B8:DU31"));
-y  = y[[3,4, 6, 8, 9, 12, 13],:]
+	[]  https://data.imf.org/regular.aspx?key=61545852
+	[*] https://www.banrep.gov.co/es/catalogo-estadisticas-disponibles#pib1994
+	[**] https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/pbi-gasto
 
+Mostly the structure of the matrices is
+ [1] GDP      [2] Consumption  [3] Investment  [4] Exports
+ [5] Imports  [6] Real GDP     [7] Deflactor
+
+And we want
+GDP         --> [6]
+CONSUMPTION --> [2]/[1] * [6]
+INVESTMENT  --> [3]/[1] * [6]
+TRADE       --> ([4] - [5])/[1]
+ ---------------------------------------------------------- =#
+Dataextract(y) =  begin
+	d1 = y[6,:];
+	d2 = (y[2,:] ./ y[1,:]) .* y[6,:];
+	d3 = (y[3,:] ./ y[1,:]) .* y[6,:];
+	d4 = (y[4,:] .- y[5,:]) ./ y[1,:];
+	return  convert(Matrix{Float64},[d1 d2 d3 100*d4]);
+end
+# Argentina
+y  = DataFrame(XLSX.readdata("./Data/GDP1.xlsx", "Quarterly!B8:DU31"));
+aux1 = convert(Vector{Float64},y[12,5:end]);
+@rput aux1
+R" library(seasonal)";
+R" aux2 = ts(aux1, frequency = 4, start = c(1990, 1))";
+R" plot(aux2)"
+R" m <- seas(aux2)";
+R" plot(m)";
+R" out1 = m$data";
+@rget out1;
+out1 = out1[:,3];
+y  = y[[3,4, 6, 8, 9, 12, 13],:]
 # Brazil
 y  = DataFrame(XLSX.readdata("./Data/GDP3.xlsx", "Quarterly!B8:DP30"));
-y  = y[[14,15,17,19,20,22,23],:]
+y  = convert(Matrix,y[[14,15,17,19,20,22,23],25:end]);
+ec2= Dataextract(y);
 
 # Chile
 y  = DataFrame(XLSX.readdata("./Data/GDP5.xlsx", "Quarterly!B8:DU30"));
-y  = y[[14,15,17,19,20,22,23],:]
+y  = convert(Matrix,y[[14,15,17,19,20,22,23],29:end]);
+ec3= Dataextract(y);
 
 # Colombia
 y  = DataFrame(XLSX.readdata("./Data/GDP6.xlsx", "Quarterly!B8:DF28"));
@@ -328,9 +357,9 @@ y  = DataFrame(XLSX.readdata("./Data/GDP9.xlsx", "Quarterly!B8:DJ19"));
 y  = y[[],:]
 
 # South Africa
-y  = DataFrame(XLSX.readdata("./Data/GDP10.xlsx", "Quarterly!B8:DM32"));
-y  = y[[15,16,18,20,21,24,25],:]
-
+y  = DataFrame(XLSX.readdata("./Data/GDP10.xlsx", "Quarterly!B8:DI32"));
+y  = convert(Matrix,y[[15,16,18,20,21,24,25],5:end]);
+ec6= Dataextract(y);
 
 
 
@@ -338,16 +367,17 @@ y  = y[[15,16,18,20,21,24,25],:]
 
 # Australia
 y  = DataFrame(XLSX.readdata("./Data/GDP2.xlsx", "Quarterly!B8:DU32"));
-y  = y[[15,16,18,20,21, 24, 25],:]
-
+y  = convert(Matrix,y[[15,16,18,20,21, 24, 25],5:end]);
+dc1= Dataextract(y);
 # Canada
 y  = DataFrame(XLSX.readdata("./Data/GDP4.xlsx", "Quarterly!B8:DS29"));
-y  = y[[12,13,15, 17, 18, 21, 22],:]
-
+y  = convert(Matrix,y[[12,13,15, 17, 18, 21, 22],5:end]);
+dc2= Dataextract(y);
 # New Zealand
 y  = DataFrame(XLSX.readdata("./Data/GDP7.xlsx", "Quarterly!B8:DU32"));
-y  = y[[15,16, 18,20,21,24,25],:]
-
+y  = convert(Matrix,y[[15,16, 18,20,21,24,25],5:end]);
+dc3= Dataextract(y);
 # Norway
 y  = DataFrame(XLSX.readdata("./Data/GDP8.xlsx", "Quarterly!B8:DV30"));
-y  = y[[14,15,17,19,20,22,23],:]
+y  = convert(Matrix,y[[14,15,17,19,20,22,23],5:end]);
+dc4= Dataextract(y);
