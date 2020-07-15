@@ -1,121 +1,353 @@
+################################################################################
+#    GLOBAL SHOCKS: Data maker heterogeneous response in Small Open Economies
+# Written by: Christian Velasquez
+# Any comment, doubt or suggestion just send me an email to velasqcb@bc.edu
+################################################################################
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
 	StatsBase, Distributions, Plots, CSV;
 
 
-
-qlabel = Array{String,2}(undef,164,1)
+# ------------------------------------------------------------------------------
+# Quaterly labels
+# ------------------------------------------------------------------------------
+qlabel = Array{String,2}(undef, 164, 1)
 for i = 1:164
-	year = string(1980+div(i-1,4))
-	quaterly = "Q" * string(mod(i-1,4)+1)
-	qlabel[i] = year * quaterly;
+    year = string(1980 + div(i - 1, 4))
+    quaterly = "Q" * string(mod(i - 1, 4) + 1)
+    qlabel[i] = year * quaterly
 end
 
+# ------------------------------------------------------------------------------
+# 	DATA
+# ------------------------------------------------------------------------------
 
-# GDP G20
-#  link:		https://data.oecd.org/gdp/quarterly-gdp.htm#indicator-chart
-# We select volume index
-g20 = DataFrame(CSV.File("C:/Users/chris/Downloads/DP_LIVE_14072020212217545.csv"));
-g20 = g20[g20.LOCATION .== "G-20",:];
-g20 = g20[:,[1,6,7]];
+#= ------------------------------------------------------------------------
+	[1.1] GDP G20
+	link:		https://data.oecd.org/gdp/quarterly-gdp.htm#indicator-chart
+	We select volume index
+ The quaterly data starts at `1998Q1`
+ ------------------------------------------------------------------------ =#
 
-# BAA spread
-#  link: https://fred.stlouisfed.org/series/BAAFFM
-#  serie: Moody's Seasoned Baa Corporate Bond Minus Federal Funds Rate
-#  rename to FRED and save in xlsx format
-baa = DataFrame(CSV.File("C:/Users/chris/Downloads/BAAFFM.csv"));
-Tmonth = size(baa)[1];
-baaq = zeros(Int(floor(Tmonth/3)));
-for i in 1:Tmonth
-	if mod(i,3)==0
-		j = div(i,3);
-		baaq[j] = mean(baa[(j-1)*3+1:3*j,2]);
-	end
+g20 =
+    DataFrame(CSV.File("./Data/DP_LIVE_14072020212217545.csv"));
+g20 = g20[g20.LOCATION.=="G-20", :];
+g20 = g20[:, [1, 6, 7]];
+
+#= ------------------------------------------------------------------------
+ 	[1.2] BAA spread
+	link: https://fred.stlouisfed.org/series/BAAFFM
+	serie: Moody's Seasoned Baa Corporate Bond Minus Federal Funds Rate
+	rename to FRED and save in xlsx format
+
+ The quaterly data starts at `1980Q1`
+ ------------------------------------------------------------------------ =#
+
+y = DataFrame(CSV.File("./Data/BAAFFM.csv"));
+Tmonth = size(y)[1];
+baaq = zeros(Int(floor(Tmonth / 3)));
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        baaq[j] = mean(y[(j-1)*3+1:3*j, 2])
+    end
 end
-# [1.] COMMODITIES PRICES E INDEXES
- #=
- Link: https://www.imf.org/en/Research/commodity-prices
- To obtain the price of differents commodities we can choose
- 		COMMODITY DATA PORTAL
- For Commoditi price index by country we choose
- 		Commodity terms of trade
-		selected: Commodity Export Price Index, Individual Commodites Weighted
-					by Ratio of Exports to Total Commodity Exports
- 					Recent, Monthly (1980 - present), Fixed Weights,
-					Index (June 2012 = 100)"
- =#
 
+#= ------------------------------------------------------------------------
+	[1.3] Commodity Prices
+		Link: https://www.imf.org/en/Research/commodity-prices
+		Commodity Data Portal
 
-
-
-m = XLSX.readdata("C:/Users/chris/Downloads/Commodity_Terms_of_Trade_Commodity_.xlsx", "data!A2:AKF184")
-dataC = [m[:,1] m[:,2:2:end]]
-dataC[1,1] = "Country";
-list  = ["Argentina" "Brazil" "Chile" "Colombia" "South Africa" "Peru" "Australia" "Canada" "New Zealand" "Norway"]
-index = [ findfirst(x -> x == i, dataC[:,1])  for i in list];
-dataC = dropdims(dataC[index,:], dims=1);
-dataC = dataC[:,2:end]
-# Quaterly
-Tmonth = size(dataC)[2];
-dataCq = zeros(10,Int(floor(Tmonth/3)));
-for i in 1:Tmonth
-	if mod(i,3)==0
-		j = div(i,3);
-		dataCq[:,j] = mean(dataC[:,(j-1)*3+1:3*j],dims=2);
-	end
+ The quaterly data starts at `1992Q1`
+ ------------------------------------------------------------------------ =#
+y = XLSX.readdata(
+    "./Data/ExternalData.xlsx",
+    "Values!A149:CJ490",
+);
+y = y[:, 1:2]
+Tmonth = size(y)[1];
+commq = zeros(Int(floor(Tmonth / 3)));
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        commq[j] = mean(y[(j-1)*3+1:3*j, 2])
+    end
 end
-dataCq =  log.(dataCq);
 
-dataCqyty  = dataCq[:,5:end] - dataCq[:,1:end-4];
-dataCqyty2 = (dataCqyty .- mean(dataCqyty,dims=2)) ./ std(dataCqyty, dims=2);
-dataCqyty  = convert(Array,dataCqyty');
-dataCqyty2 = dataCqyty2';
-T = size(dataCqyty)[1];
-p1 = plot(layout=grid(3,2,widths =(0.57,0.43) ), size=(1200,600))
-plot!(dataCqyty[:,1:3], c= [:black :red :teal], markershape=[:none :circle :none],
-	w= [1 1.5 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid], xaxis=false,grid= false,
-	label= [list[1] list[2] list[3]],legendfontsize=6, legend=:outertopleft,
-	fg_legend = :transparent, subplot=1);
-plot!(dataCqyty2[:,1:3], c= [:black :red :teal], markershape=[:none :circle :none],
-	w= [1 1.5 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid], xaxis = false, grid =false,	label= "", subplot=2);
-plot!(dataCqyty[:,4:6], c= [:black :red :teal], markershape=[:none :circle :none],
-	w= [1 1.5 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid], xaxis=false, grid = false,
-	label= [list[4] list[5] list[6]],legendfontsize=5, legend=:outertopleft,
-	fg_legend = :transparent, subplot=3);
-plot!(dataCqyty2[:,4:6], c= [:black :red :teal], markershape=[:none :circle :none],
-	w= [1 1.5 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid], xaxis=false, grid= false,label= "", subplot=4);
-plot!(dataCqyty[:,7:10], c= [:black :red :teal :purple], markershape=[:none :circle :none :none],
-	w= [1 1.5 1 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid :solid], xticks = (1:24:T, qlabel[5:24:T]),grid= false,
-	label= [list[7] list[8] list[9] list[10]],legendfontsize=5, legend=:outertopleft,
-	fg_legend = :transparent, subplot=5);
-plot!(dataCqyty2[:,7:10], c= [:black :red :teal :purple], markershape=[:none :circle :none :none],
-	w= [1 1.5 1 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid :solid], xticks = (1:24:T, qlabel[5:24:T]), grid= false,
-	label= "", subplot=6);
+# ------------------------------------------------------------------------
+# Graphics for global variables
+# ------------------------------------------------------------------------
 
-plot(p1)
-savefig("comm1.svg")
+Wvar = [log.([g20[1:84, 3] commq[25:108]]) baaq[73:156]];
+wvar = Wvar[2:end, :] - Wvar[1:end-1, :];
+wvar = [100 * wvar[:, 1:2] 0.5 * Wvar[2:end, 3]];
+Wlabel = qlabel[73:156];
+
+T = size(wvar)[1];
+p = plot(
+    wvar[:, [1, 3]],
+    ylims = (-2, 5),
+    fg_legend = :transparent,
+    legendfontsize = 6,
+    label = ["G20 output" "BAA spread"],
+    legend = :bottomleft,
+    xticks = (1:12:T, Wlabel[2:12:T+1]),
+    w = [1 2.5],
+    style = [:dash :dot],
+    c = [:black :gray],
+    title = "Figure 1: Evolution of macro variables",
+    titlefontsize = 10,
+    ygrid = :none,
+)
+p = twinx();
+plot!(
+    p,
+    wvar[:, 2],
+    ylims = (-50, 40),
+    legend = false,
+    xticks = :none,
+    c = :red,
+    w = 1.15,
+    alpha = 0.75,
+    ygridstyle = :dash,
+);
+plot!(NaN .* (1:T), c = :red, label = "Commodity prices");
+savefig(".//Figures//intro1.svg");
+
+#= ------------------------------------------------------------------------
+ 	 [-] COMMODITIES PRICES BY COUNTRY
+			Link: https://www.imf.org/en/Research/commodity-prices
+			To obtain the price of differents commodities we can choose
+				COMMODITY DATA PORTAL
+				For Commoditi price index by country we choose
+				Commodity terms of trade
+				selected: Commodity Export Price Index, Individual Commodites
+				Weighted by Ratio of Exports to Total Commodity Exports
+				Recent, Monthly (1980 - present), Fixed Weights,
+				Index (June 2012 = 100)"
+ ------------------------------------------------------------------------ =#
+
+y = XLSX.readdata(
+    "./Data/Commodity_Terms_of_Trade_Commodity_.xlsx",
+    "data!A2:AKF184",
+)
+y= [y[:, 1] y[:, 2:2:end]];
+y[1, 1] = "Country";
+list =
+    ["Argentina" "Brazil" "Chile" "Colombia" "South Africa" "Peru" "Australia" "Canada" "New Zealand" "Norway"];
+index = [findfirst(x -> x == i, y[:, 1]) for i in list];
+y = dropdims(y[index, :], dims = 1);
+y = y[:, 2:end];
+
+# ------------------------------------------------------------------------
+# Quarterly commodities
+Tmonth = size(y)[2];
+dataCq = zeros(10, Int(floor(Tmonth / 3)));
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        dataCq[:, j] = mean(y[:, (j-1)*3+1:3*j], dims = 2)
+    end
+end
+dataCq     = log.(dataCq);
+dataCqyty  = dataCq[:, 5:end] - dataCq[:, 1:end-4];
+dataCqyty2 =
+    (dataCqyty .- mean(dataCqyty, dims = 2)) ./ std(dataCqyty, dims = 2);
+
+dataCqyty  = convert(Array, dataCqyty'); # Matrix form
+dataCqyty2 = dataCqyty2';# Standarized variables
+
+T  = size(dataCqyty)[1];
+p1 = plot(layout = grid(3, 1), size = (1000, 1000))
+plot!(
+    dataCqyty[:, 1:3],
+    c = [:black :red :teal],
+    markershape = [:none :circle :none],
+    w = [1 1.5 1],
+    markersize = 2.5,
+    markercolor = :red,
+    markerstrokewidth = 0.1,
+    style = [:solid :dot :solid],
+    xaxis = false,
+    grid = false,
+    label = [list[1] list[2] list[3]],
+    legendfontsize = 9,
+    legend = :topleft,
+    fg_legend = :transparent,
+    bg_legend = :transparent,
+    subplot = 1,
+    tickfontsize = 10,
+);
+plot!(
+    dataCqyty[:, 4:6],
+    c = [:black :red :teal],
+    markershape = [:none :circle :none],
+    w = [1 1.5 1],
+    markersize = 2.5,
+    markercolor = :red,
+    markerstrokewidth = 0.1,
+    style = [:solid :dot :solid],
+    xaxis = false,
+    grid = false,
+    label = [list[4] list[5] list[6]],
+    legendfontsize = 9,
+    legend = :topleft,
+    fg_legend = :transparent,
+    bg_legend = :transparent,
+    subplot = 2,
+    tickfontsize = 10,
+);
+plot!(
+    dataCqyty[:, 7:10],
+    c = [:black :red :teal :purple],
+    markershape = [:none :circle :none :none],
+    w = [1 1.5 1 1],
+    markersize = 2.5,
+    markercolor = :red,
+    markerstrokewidth = 0.1,
+    style = [:solid :dot :solid :solid],
+    xticks = (1:24:T, qlabel[5:24:T]),
+    grid = false,
+    label = [list[7] list[8] list[9] list[10]],
+    legendfontsize = 9,
+    legend = :topleft,
+    fg_legend = :transparent,
+    bg_legend = :transparent,
+    subplot = 3,
+    tickfontsize = 10,
+);
+plot(p1);
+savefig(".//Figures//comm1.svg");
 
 
-p2 = plot(layout=grid(3,1), size=(1000,1000))
-plot!(dataCqyty2[:,1:3], c= [:black :red :teal], markershape=[:none :circle :none],
-	w= [1 1.5 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid], xaxis=false,grid= false,
-	label= [list[1] list[2] list[3]],legendfontsize=6, legend=:topleft,
-	fg_legend = :transparent, subplot=1);
-plot!(dataCqyty2[:,4:6], c= [:black :red :teal], markershape=[:none :circle :none],
-	w= [1 1.5 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid], xaxis=false, grid = false,
-	label= [list[4] list[5] list[6]],legendfontsize=8, legend=:topleft,
-	fg_legend = :transparent, subplot=2);
-plot!(dataCqyty2[:,7:10], c= [:black :red :teal :purple], markershape=[:none :circle :none :none],
-	w= [1 1.5 1 1],markersize = 2.5, markercolor = :red , markerstrokewidth= 0.1,
-	style=[:solid :dot :solid :solid], xticks = (1:24:T, qlabel[5:24:T]),grid= false,
-	label= [list[7] list[8] list[9] list[10]],legendfontsize=6, legend=:topleft,
-	fg_legend = :transparent, subplot=3);
-plot(p2)
-savefig("comm2.svg")
+p2 = plot(layout = grid(3, 1), size = (1000, 1000))
+plot!(
+    dataCqyty2[:, 1:3],
+    c = [:black :red :teal],
+    markershape = [:none :circle :none],
+    w = [1 1.5 1],
+    markersize = 2.5,
+    markercolor = :red,
+    markerstrokewidth = 0.1,
+    style = [:solid :dot :solid],
+    xaxis = false,
+    grid = false,
+    label = [list[1] list[2] list[3]],
+    legendfontsize = 9,
+    legend = :topleft,
+    fg_legend = :transparent,
+    bg_legend = :transparent,
+    subplot = 1,
+    tickfontsize = 10,
+);
+plot!(
+    dataCqyty2[:, 4:6],
+    c = [:black :red :teal],
+    markershape = [:none :circle :none],
+    w = [1 1.5 1],
+    markersize = 2.5,
+    markercolor = :red,
+    markerstrokewidth = 0.1,
+    style = [:solid :dot :solid],
+    xaxis = false,
+    grid = false,
+    label = [list[4] list[5] list[6]],
+    legendfontsize = 9,
+    legend = :topleft,
+    fg_legend = :transparent,
+    bg_legend = :transparent,
+    subplot = 2,
+    tickfontsize = 10,
+);
+plot!(
+    dataCqyty2[:, 7:10],
+    c = [:black :red :teal :purple],
+    markershape = [:none :circle :none :none],
+    w = [1 1.5 1 1],
+    markersize = 2.5,
+    markercolor = :red,
+    markerstrokewidth = 0.1,
+    style = [:solid :dot :solid :solid],
+    xticks = (1:24:T, qlabel[5:24:T]),
+    grid = false,
+    label = [list[7] list[8] list[9] list[10]],
+    legendfontsize = 9,
+    legend = :topleft,
+    fg_legend = :transparent,
+    bg_legend = :transparent,
+    subplot = 3,
+    tickfontsize = 10,
+);
+plot(p2);
+savefig(".//Figures//comm2.svg");
+
+#= ------------------------------------------------------------------------
+ 	 [-] REAL EFFECTIVE EXCHANGE RATE
+	 	link:https://www.bis.org/statistics/eer.htm?m=6%7C381%7C676
+		narrow indices
+		The indices starts at 1994-1
+ ------------------------------------------------------------------------ =#
+y  = XLSX.readdata(
+     "./Data/broad.xlsx",
+     "Real!A4:BI322",
+);
+index = [findfirst(x -> x == i, y[1, :]) for i in list];
+y  = dropdims(y[:,index], dims=2);
+y  = y[3:end,:];
+Tmonth = size(y)[1];
+reerq  = zeros(Int(floor(Tmonth / 3)),10);
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        reerq[j,:] = mean(y[(j-1)*3+1:3*j,:], dims = 1)
+    end
+end
+
+#= ------------------------------------------------------------------------
+ 	[-] NATIONAL ACCOUNTS
+	https://data.imf.org/regular.aspx?key=61545852
+	https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/pbi-gasto
+ ------------------------------------------------------------------------ =#
+# Argetina
+y  = DataFrame(XLSX.readdata("./Data/GDP1.xlsx", "Quarterly!B8:DU31"));
+y  = y[[3,4, 6, 8, 9, 12, 13],:]
+
+# Brazil
+y  = DataFrame(XLSX.readdata("./Data/GDP3.xlsx", "Quarterly!B8:DP30"));
+y  = y[[14,15,17,19,20,22,23],:]
+
+# Chile
+y  = DataFrame(XLSX.readdata("./Data/GDP5.xlsx", "Quarterly!B8:DU30"));
+y  = y[[14,15,17,19,20,22,23],:]
+
+# Colombia
+y  = DataFrame(XLSX.readdata("./Data/GDP6.xlsx", "Quarterly!B8:DF28"));
+y  = y[[],:]
+
+# Peru
+y  = DataFrame(XLSX.readdata("./Data/GDP9.xlsx", "Quarterly!B8:DJ19"));
+y  = y[[],:]
+
+# South Africa
+y  = DataFrame(XLSX.readdata("./Data/GDP10.xlsx", "Quarterly!B8:DM32"));
+y  = y[[15,16,18,20,21,24,25],:]
+
+
+
+
+
+
+# Australia
+y  = DataFrame(XLSX.readdata("./Data/GDP2.xlsx", "Quarterly!B8:DU32"));
+y  = y[[15,16,18,20,21, 24, 25],:]
+
+# Canada
+y  = DataFrame(XLSX.readdata("./Data/GDP4.xlsx", "Quarterly!B8:DS29"));
+y  = y[[12,13,15, 17, 18, 21, 22],:]
+
+# New Zealand
+y  = DataFrame(XLSX.readdata("./Data/GDP7.xlsx", "Quarterly!B8:DU32"));
+y  = y[[15,16, 18,20,21,24,25],:]
+
+# Norway
+y  = DataFrame(XLSX.readdata("./Data/GDP8.xlsx", "Quarterly!B8:DV30"));
+y  = y[[14,15,17,19,20,22,23],:]
