@@ -52,8 +52,25 @@ for i = 1:Tmonth
     end
 end
 
+
 #= ------------------------------------------------------------------------
-	[1.3] Commodity Prices
+ [1.3]Import Price Index:Industrialized Countries- Manufactured articles
+ link: https://fred.stlouisfed.org/series/INDUSMANU
+ The monthly data starts at `1990M12`
+ The quaterly starts at 1994Q1
+ ------------------------------------------------------------------------ =#
+y = DataFrame(CSV.File("./Data/INDUSMANU.csv"));
+y = parse.(Float64,convert(Vector,y[38:end,2]));
+Tmonth = size(y)[1];
+indusq = zeros(Int(floor(Tmonth / 3)));
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        indusq[j] = mean(y[(j-1)*3+1:3*j])
+    end
+end
+#= ------------------------------------------------------------------------
+	[1.4] Commodity Prices
 		Link: https://www.imf.org/en/Research/commodity-prices
 		Commodity Data Portal
 
@@ -306,82 +323,118 @@ end
  	[-] NATIONAL ACCOUNTS
 	[]  https://data.imf.org/regular.aspx?key=61545852
 	[*] https://www.banrep.gov.co/es/catalogo-estadisticas-disponibles#pib1994
-	Oferta y Demanda Finales en el Territorio Nacional / Precios constantes / Miles de millones de pesos / Trimestral / Información disponible desde 2005
-	Oferta y demanda finales en el territorio nacional / Precios constantes / Miles de millones de pesos / Desestacionalizada trimestral / Información disponible desde 2000
-	Oferta y demanda finales en el territorio nacional / A precios constantes / A millones de pesos / Trimestral / Información disponibles desde 1994 a 2007
-	[**] https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/pbi-gasto
+	Oferta y Demanda Finales en el Territorio Nacional /
+		Precios constantes / Miles de millones de pesos /
+		Trimestral / Información disponible desde 2005
+	Oferta y demanda finales en el territorio nacional /
+		Precios constantes / Miles de millones de pesos /
+		Desestacionalizada trimestral / Información disponible desde 2000
+	Oferta y demanda finales en el territorio nacional /
+		A precios constantes / A millones de pesos /
+		Trimestral / Información disponibles desde 1994 a 2007
+	[**] Adjusted by seasonality using XArima13 in R
 
 Mostly the structure of the matrices is
  [1] GDP      [2] Consumption  [3] Investment  [4] Exports
- [5] Imports  [6] Real GDP     [7] Deflactor
+ [5] Imports  [6] Real GDP
 
 And we want
 GDP         --> [6]
 CONSUMPTION --> [2]/[1] * [6]
 INVESTMENT  --> [3]/[1] * [6]
 TRADE       --> ([4] - [5])/[1]
- ---------------------------------------------------------- =#
+ -------------------------------------------------------------------------- =#
 Dataextract(y) =  begin
-	d1 = y[6,:];  # this is the real GDP
+	# It puts in real terms everything
+	d1 = y[6,:];                   # this is the real GDP
 	d2 = (y[2,:] ./ y[1,:]) .* d1; # real consumption
 	d3 = (y[3,:] ./ y[1,:]) .* d1; # real investment
 	d4 = (y[4,:] .- y[5,:]) ./ y[1,:]; # % net exports
 	return  convert(Matrix{Float64},[d1 d2 d3 100*d4]);
 end
 
-# ++++++++++++++++++++++++++++++++++++
-# Argentina **
-# ++++++++++++++++++++++++++++++++++++
-y    = DataFrame(XLSX.readdata("./Data/GDP1.xlsx", "Quarterly!B8:DU31"));
-aux1 = convert(Vector{Float64},y[12,5:end]);
+YBase(y,start) = begin
+	# It put the serie y in a year base
+	return log.(100* (y ./ mean(y[start:start+3])))
+end
 
+
+#= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	Argentina
+	Not seasonal adjusted
+	Start: 1993Q1
+	Base : 2000
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
+basey = 2000;
+y    = DataFrame(XLSX.readdata("./Data/GDP1.xlsx", "Quarterly!B8:DU31"));
+aux1 = convert(Vector{Float64},y[12,17:end]);
 	# -----------------------
 	# Removing the seasonality
 	# -----------------------
 	@rput aux1
 	R" library(seasonal)";
-	R" aux2 = ts(aux1, frequency = 4, start = c(1990, 1))";
+	R" aux2 = ts(aux1, frequency = 4, start = c(1993, 1))";
 	R" plot(aux2)"
 	R" m <- seas(aux2)";
 	R" plot(m)";
 	R" out1 = m$data";
 	@rget out1;
 	out1 = out1[:,3]; # This is the series without seasonal effects
-seas = aux1./out1
-y  = y[[3,4, 6, 8, 9, 12, 13],:]
 
-# ++++++++++++++++++++++++++++++++++++
+y  = convert(Matrix,y[[3,4, 6, 8, 9,12],17:end]);
+ec1= Dataextract(y);
+seas = y[6,:] ./ out1
+ec1  = ec1 ./ seas;
+
+stq = (basey-1993)*4+1;
+ec1 = [YBase(ec1[:,1],stq) YBase(ec1[:,2],stq) YBase(ec1[:,3],stq) ec1[:,4]];
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Brazil
-# ++++++++++++++++++++++++++++++++++++
+# Start at 1996Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 y  = DataFrame(XLSX.readdata("./Data/GDP3.xlsx", "Quarterly!B8:DP30"));
 y  = convert(Matrix,y[[14,15,17,19,20,23],25:end]);
 ec2= Dataextract(y);
+stq = (basey-1996)*4+1;
+ec2 = [YBase(ec2[:,1],stq) YBase(ec2[:,2],stq) YBase(ec2[:,3],stq) ec2[:,4]];
 
 
-# ++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Chile
-# ++++++++++++++++++++++++++++++++++++
+# Start at 1996Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP5.xlsx", "Quarterly!B8:DU30"));
 y  = convert(Matrix,y[[14,15,17,19,20,23],29:end]);
 ec3= Dataextract(y);
+stq= (basey-1996)*4+1;
+ec3= [YBase(ec3[:,1],stq) YBase(ec3[:,2],stq) YBase(ec3[:,3],stq) ec3[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
-# Colombia ***
-# ++++++++++++++++++++++++++++++++++++
-y  = DataFrame(XLSX.readdata("./Data/GDP6.xlsx", "Quarterly!B8:DF28"));
-y  = y[[],:]
+#= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ Colombia
+ * It is already adjusted by
+ seasonallity, but I need to chain
+ the data to have a sample from 1994
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
+y  = DataFrame(XLSX.readdata("./Data/ColGDP.xlsx", "data!A3:CW8"));
+y  = convert(Matrix,y[2:end, 2:end]);
+y  = y';
+stq= (basey-1994)*4+1;
+ec4= [YBase(y[:,1],stq) YBase(y[:,2],stq) YBase(y[:,3],stq) y[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
-# Peru **
-# ++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Peru
+# ** It was adjusted with XArima13
+# Starts at 1990Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP9.xlsx", "Quarterly!B8:DJ19"));
 y  = convert(Matrix,y[[3,4,6,8,9,12],5:end]);
 deflator = y[6,:]';
 y  = y ./ deflator;
-	# -----------------------
-	# Removing the seasonality
-	# -----------------------
+ # -----------------------
+ # Removing the seasonality
+ # -----------------------
 	aux1 = y[1,:];
 	@rput aux1
 	R" library(seasonal)";
@@ -395,38 +448,70 @@ y  = y ./ deflator;
 	seas = aux1./out1
 y[1:5,:] = y[1:5,:] ./ (seas');
 ec5= Dataextract(y);
+stq= (basey-1990)*4+1;
+ec5= [YBase(ec5[:,1],stq) YBase(ec5[:,2],stq) YBase(ec5[:,3],stq) ec5[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # South Africa
-# ++++++++++++++++++++++++++++++++++++
+# Starts at 1990Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP10.xlsx", "Quarterly!B8:DI32"));
 y  = convert(Matrix,y[[15,16,18,20,21,25],5:end]);
 ec6= Dataextract(y);
+stq= (basey-1990)*4+1;
+ec6= [YBase(ec6[:,1],stq) YBase(ec6[:,2],stq) YBase(ec6[:,3],stq) ec6[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Australia
-# ++++++++++++++++++++++++++++++++++++
+# Starts at 1990Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP2.xlsx", "Quarterly!B8:DU32"));
 y  = convert(Matrix,y[[15,16,18,20,21,25],5:end]);
 dc1= Dataextract(y);
+stq= (basey-1990)*4+1;
+dc1= [YBase(dc1[:,1],stq) YBase(dc1[:,2],stq) YBase(dc1[:,3],stq) dc1[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Canada
-# ++++++++++++++++++++++++++++++++++++
+# Starts at 1990Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP4.xlsx", "Quarterly!B8:DS29"));
 y  = convert(Matrix,y[[12,13,15, 17, 18, 22],5:end]);
 dc2= Dataextract(y);
+stq= (basey-1990)*4+1;
+dc2= [YBase(dc2[:,1],stq) YBase(dc2[:,2],stq) YBase(dc2[:,3],stq) dc2[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # New Zealand
-# ++++++++++++++++++++++++++++++++++++
+# Starts at 1990Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP7.xlsx", "Quarterly!B8:DU32"));
 y  = convert(Matrix,y[[15,16, 18,20,21,25],5:end]);
 dc3= Dataextract(y);
+stq= (basey-1990)*4+1;
+dc3= [YBase(dc3[:,1],stq) YBase(dc3[:,2],stq) YBase(dc3[:,3],stq) dc3[:,4]];
 
-# ++++++++++++++++++++++++++++++++++++
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Norway
-# ++++++++++++++++++++++++++++++++++++
+# Starts at 1990Q1
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("./Data/GDP8.xlsx", "Quarterly!B8:DV30"));
 y  = convert(Matrix,y[[14,15,17,19,20,23],5:end]);
 dc4= Dataextract(y);
+stq= (basey-1990)*4+1;
+dc4= [YBase(dc4[:,1],stq) YBase(dc4[:,2],stq) YBase(dc4[:,3],stq) dc4[:,4]];
+
+
+#= ------------------------------------------------------------------------
+ 	[-] INTEREST RATES
+https://www.bis.org/statistics/cbpol.htm?m=6%7C382%7C679
+https://estadisticas.bcrp.gob.pe/estadisticas/series/mensuales/tasas-de-interes
+ -------------------------------------------------------------------------- =#
+irate = XLSX.readdata("./Data/cbpol_2007.xlsx", "Monthly!A3:K321");
+y2    = XLSX.readdata("./Data/intratePer.xlsx", "Mensuales!A2:B296");
+yy = [irate[26:end,10] y2[2:end,2]];
+dplot = convert(Matrix{Float64},yy[94:end,:]);
+plot(dplot);
+# Then the overnight interbak lending rate is a good proxy of mp
+irate[26:end,10] = y2[2:end,2];
