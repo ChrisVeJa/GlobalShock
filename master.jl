@@ -7,36 +7,18 @@
 # ===========================================================================
 # [0] Libraries and required module
 # ===========================================================================
-using Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributions, Plots;
+using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
+	StatsBase, Distributions, Plots, CSV, RCall;
+dir1 = "G:/My Drive/GlobalShocks/data";
+include("GlobalShockDataLoader.jl");
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
 include(".//fcns//ToHtml.jl");
-if ~isdir(".//Figures")   mkdir("Figures") end
+
 # ===========================================================================
 # [1] Introduction
 # ===========================================================================
-gframe = DataFrame(XLSX.readtable("file1.xlsx", "data")...);
-gdata = convert(Array{Float64},gframe[:,2:end]);
-gdata = [100*gdata[2:end,1:2] - 100*gdata[1:end-1,1:2] 0.5*gdata[2:end,3]]
-gdate = convert(Array{String},gframe[2:end,1]);
-
-# --------------------------------------------------------------------------
-# [1.1 Figure 1]
-T = length(gdate);
-p = plot(gdata[:,[1,3]],ylims=(-2,5),fg_legend = :transparent,
-        legendfontsize=6,label = ["G20 output" "BAA spread"],
-        legend=:bottomleft, xticks = (1:12:T, gdate[1:12:T]),
-        w = [1 2.5],style = [:dash :dot], c= [:black :gray],
-        title = "Figure 1: Evolution of macro variables" ,
-        titlefontsize = 10, ygrid=:none,
-        )
-p = twinx()
-plot!(p,gdata[:,2],ylims=(-50,20), legend= false,
-    xticks= :none, c= :red, w= 1.15 , alpha=0.75,
-    ygridstyle=:dash,
-    )
-plot!(NaN.*(1:T),c = :red, label= "Commodity prices");
-savefig(".//Figures//intro1.svg")
+dataset, qlabel,list = GlobalShockDataLoader(dir1);
 # --------------------------------------------------------------------------
 # [1.2 Correlations]
 CoRR = cor(gdata);

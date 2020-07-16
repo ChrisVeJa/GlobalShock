@@ -4,10 +4,9 @@
 # Written by: Christian Velasquez
 # velasqcb@bc.edu
 ################################################################################
-using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
-	StatsBase, Distributions, Plots, CSV, RCall;
-dir1 = "G:/My Drive/GlobalShocks/data";
 function GlobalShockDataLoader(dir1)
+
+if ~isdir(".//Figures")   mkdir("Figures") end
 # ------------------------------------------------------------------------------
 # Quaterly labels
 # ------------------------------------------------------------------------------
@@ -540,6 +539,6 @@ mec7 = [g20 tot[:,7] baaq dc1 irateq[:,7]];
 mec8 = [g20 tot[:,8] baaq dc2 irateq[:,8]];
 mec9 = [g20 tot[:,9] baaq dc3 irateq[:,9]];
 mec10 = [g20 tot[:,10] baaq dc4 irateq[:,10]];
-
-	return dataset = [mec1 mec2 mec3 mec4 mec5 mec6 mec7 mec8 mec9 mec10];
+ dataset = [mec1 mec2 mec3 mec4 mec5 mec6 mec7 mec8 mec9 mec10]
+	return dataset, qlabel,list;
 end
