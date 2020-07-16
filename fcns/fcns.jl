@@ -7,9 +7,11 @@ function gos_creator(df, col::Int64, name, p, h)
         Array{Float64},
         df[:, $start:$start+8][completecases(df[:, $start:$start+8]), :],
     ))
-    tupname = Symbol.("Extra" .* string.(name));
+    tupname = Symbol.("a2" .* string.(name));
+	tupname = Symbol.("a1" .* string.(name));
     lines    = name[col];
     tuplines = tupname[col];
+	errorlines = tupname[col];
     ex =:(($lines, UU, $tuplines) = GlobalShock.GSstimation($y, p, h, xblock = true, nx = 3))
     return ex
 end

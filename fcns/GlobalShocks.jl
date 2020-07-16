@@ -117,7 +117,7 @@ function GSstimation(
 	# -------------------------
     Γ = median(Γ, dims = 2)
     ξ = median(ξ, dims = 3)
-    display("It is already done!")
+    display("It is done!")
     Set = (
         lags = p,
         horizon = h,
