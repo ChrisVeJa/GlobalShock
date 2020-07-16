@@ -384,7 +384,7 @@ ec1 = ec1[21:104,:];
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 y  = DataFrame(XLSX.readdata("$dir1/GDP3.xlsx", "Quarterly!B8:DP30"));
-y  = convert(Matrix,y[[14,15,17,19,20,23],25:end]);
+y  = convert(Matrix,y[[14,15,17,19,20,22],25:end]);
 ec2= Dataextract(y);
 stq = (basey-1996)*4+1;
 ec2 = [YBase(ec2[:,1],stq) YBase(ec2[:,2],stq) YBase(ec2[:,3],stq) ec2[:,4]];
@@ -395,7 +395,7 @@ ec2 = ec2[9:92,:];
 # Start at 1996Q1
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("$dir1/GDP5.xlsx", "Quarterly!B8:DU30"));
-y  = convert(Matrix,y[[14,15,17,19,20,23],29:end]);
+y  = convert(Matrix,y[[14,15,17,19,20,22],29:end]);
 ec3= Dataextract(y);
 stq= (basey-1996)*4+1;
 ec3= [YBase(ec3[:,1],stq) YBase(ec3[:,2],stq) YBase(ec3[:,3],stq) ec3[:,4]];
@@ -415,7 +415,7 @@ ec4= ec4[17:100,:];
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # Peru
  ** It was adjusted with XArima13
- Starts at 1990Q1
+ Starts at 1998Q1 all variable are real but not seassonaly adjusted
  https://estadisticas.bcrp.gob.pe/estadisticas/series/trimestrales/pbi-gasto
  Series:
 	PN02529AQ 	Demanda Interna - Consumo Privado
@@ -425,17 +425,15 @@ ec4= ec4[17:100,:];
 	PN02537AQ	Importaciones
 	PN02538AQ	PBI
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
-y  = DataFrame(XLSX.readdata("$dir1/Trimestral.xlsx", "Quarterly!B8:DJ19"));
-y  = convert(Matrix,y[[3,4,6,8,9,12],5:end]);
-deflator = y[6,:]';
-y  = y ./ deflator;
+y  = DataFrame(XLSX.readdata("$dir1/Trimestral.xlsx", "Trimestrales!A2:F86"));
+
  # -----------------------
  # Removing the seasonality
  # -----------------------
-	aux1 = y[1,:];
+	aux1 = convert(Vector{Float64},y[2:end,6]);
 	@rput aux1
 	R" library(seasonal)";
-	R" aux2 = ts(aux1, frequency = 4, start = c(1990, 1))";
+	R" aux2 = ts(aux1, frequency = 4, start = c(1998, 1))";
 	R" plot(aux2)"
 	R" m <- seas(aux2)";
 	R" plot(m)";
@@ -443,17 +441,19 @@ y  = y ./ deflator;
 	@rget out1;
 	out1 = out1[:,3]; # This is the series without seasonal effects
 	seas = aux1./out1
-y[1:5,:] = y[1:5,:] ./ (seas');
-ec5= Dataextract(y);
-stq= (basey-1990)*4+1;
-ec5= [YBase(ec5[:,1],stq) YBase(ec5[:,2],stq) YBase(ec5[:,3],stq) ec5[:,4]];
-ec5 = ec5[33:116,:]
+y  = convert(Matrix{Float64},y[2:end,2:end] ./ (seas));
+trade = 100*((y[:,3] - y[:,4])./ y[:,5])
+stq= (basey-1998)*4+1;
+ec5= [YBase(y[:,5],stq) YBase(y[:,1],stq) YBase(y[:,2],stq) trade];
+
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 # South Africa
 # Starts at 1990Q1
+# Additionally: http://www.statssa.gov.za/?page_id=1854&PPN=P0441&SCH=7746
+#		GDP P0441- 2020Q1 (7,83 MB)
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-y  = DataFrame(XLSX.readdata("$dir1/GDP10.xlsx", "Quarterly!B8:DI32"));
-y  = convert(Matrix,y[[15,16,18,20,21,25],5:end]);
+y  = DataFrame(XLSX.readdata("$dir1/GDP10.xlsx", "Quarterly!B8:DQ31"));
+y  = convert(Matrix,y[[15,16,18,20,21,24],5:end]);
 ec6= Dataextract(y);
 stq= (basey-1990)*4+1;
 ec6= [YBase(ec6[:,1],stq) YBase(ec6[:,2],stq) YBase(ec6[:,3],stq) ec6[:,4]];
@@ -464,7 +464,7 @@ ec6 = ec6[33:116,:]
 # Starts at 1990Q1
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("$dir1/GDP2.xlsx", "Quarterly!B8:DU32"));
-y  = convert(Matrix,y[[15,16,18,20,21,25],5:end]);
+y  = convert(Matrix,y[[15,16,18,20,21,24],5:end]);
 dc1= Dataextract(y);
 stq= (basey-1990)*4+1;
 dc1= [YBase(dc1[:,1],stq) YBase(dc1[:,2],stq) YBase(dc1[:,3],stq) dc1[:,4]];
@@ -474,7 +474,7 @@ dc1 = dc1[33:116,:];
 # Starts at 1990Q1
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("$dir1/GDP4.xlsx", "Quarterly!B8:DS29"));
-y  = convert(Matrix,y[[12,13,15, 17, 18, 22],5:end]);
+y  = convert(Matrix,y[[12,13,15, 17, 18, 21],5:end]);
 dc2= Dataextract(y);
 stq= (basey-1990)*4+1;
 dc2= [YBase(dc2[:,1],stq) YBase(dc2[:,2],stq) YBase(dc2[:,3],stq) dc2[:,4]];
@@ -484,7 +484,7 @@ dc2 = dc2[33:116,:];
 # Starts at 1990Q1
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("$dir1/GDP7.xlsx", "Quarterly!B8:DU32"));
-y  = convert(Matrix,y[[15,16, 18,20,21,25],5:end]);
+y  = convert(Matrix,y[[15,16, 18,20,21,24],5:end]);
 dc3= Dataextract(y);
 stq= (basey-1990)*4+1;
 dc3= [YBase(dc3[:,1],stq) YBase(dc3[:,2],stq) YBase(dc3[:,3],stq) dc3[:,4]];
@@ -494,7 +494,7 @@ dc3 = dc3[33:116,:];
 # Starts at 1990Q1
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 y  = DataFrame(XLSX.readdata("$dir1/GDP8.xlsx", "Quarterly!B8:DV30"));
-y  = convert(Matrix,y[[14,15,17,19,20,23],5:end]);
+y  = convert(Matrix,y[[14,15,17,19,20,22],5:end]);
 dc4= Dataextract(y);
 stq= (basey-1990)*4+1;
 dc4= [YBase(dc4[:,1],stq) YBase(dc4[:,2],stq) YBase(dc4[:,3],stq) dc4[:,4]];
@@ -515,19 +515,29 @@ irate[26:end,10] = y2[2:end,2];
 # Now, putting in the correct order
 index = [findfirst(x -> x == i, irate[1,:]) for i in list];
 irate = dropdims(irate[50:end-18,index], dims=2);
+Tmonth = size(irate)[1];
+irateq = zeros(Int(floor(Tmonth / 3)),10);
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        irateq[j,:] = mean(irate[(j-1)*3+1:3*j,:], dims = 1)
+    end
+end
 
 #= ------------------------------------------------------------------------
 	CREATING THE DATASET
 The order of the variables are:
 g20 >> comm >> baa >> gdp >> cons >> inv >> trade >> reer >> irate
 -------------------------------------------------------------------------- =#
-[g20 tot[:,1] baaq ec1 irate[:,1]]
-[g20 tot[:,2] baaq ec2 irate[:,2]]
-[g20 tot[:,3] baaq ec3 irate[:,3]]
-[g20 tot[:,4] baaq ec4 irate[:,4]]
-[g20 tot[:,5] baaq ec5 irate[:,5]]
-[g20 tot[:,6] baaq ec6 irate[:,6]]
-[g20 tot[:,7] baaq dc1 irate[:,7]]
-[g20 tot[:,8] baaq dc2 irate[:,8]]
-[g20 tot[:,9] baaq dc3 irate[:,9]]
-[g20 tot[:,10] baaq dc4 irate[:,10]]
+mec1 = [g20 tot[:,1] baaq ec1 irateq[:,1]];
+mec2 = [g20 tot[:,2] baaq ec2 irateq[:,2]];
+mec3 = [g20 tot[:,3] baaq ec3 irateq[:,3]];
+mec4 = [g20 tot[:,4] baaq ec4 irateq[:,4]];
+mec5 = [g20 tot[:,5] baaq ec5 irateq[:,5]];
+mec6 = [g20 tot[:,6] baaq ec6 irateq[:,6]];
+mec7 = [g20 tot[:,7] baaq dc1 irateq[:,7]];
+mec8 = [g20 tot[:,8] baaq dc2 irateq[:,8]];
+mec9 = [g20 tot[:,9] baaq dc3 irateq[:,9]];
+mec10 = [g20 tot[:,10] baaq dc4 irateq[:,10]];
+
+dataset = [mec1 mec2 mec3 mec4 mec5 mec6 mec7 mec8 mec9 mec10];
