@@ -9,7 +9,7 @@
 # ===========================================================================
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
 	StatsBase, Distributions, Plots, CSV, RCall;
-include("GlobalShockDataLoader.jl");
+include(".//fcns//GlobalShockDataLoader.jl");
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
 include(".//fcns//ToHtml.jl");
@@ -17,6 +17,7 @@ include(".//fcns//ToHtml.jl");
 # ===========================================================================
 # [1] Introduction
 # ===========================================================================
+colist  = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
 dir1 = "G:/My Drive/GlobalShocks/data";
 wvar,dataset, qlabel, list = GlobalShockDataLoader(dir1);
 # --------------------------------------------------------------------------
@@ -68,7 +69,6 @@ display(CoRR2)
 df   = DataFrame(XLSX.readtable("basedato.xlsx", "data")...)
 name = [:GSArg :GSBra :GSChl :GSCol :GSPer :GSSoA :GSAus :GSCan :GSNrw :GSNzl];
 countries = [:Argentina :Brazil :Chile :Colombia :Peru :SouthAfrica :Australia :Canada :Norway :NewZeland];
-colist  = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
 CouList = string.(name) .* ".svg";
 labels  = ["GDP G20" "ComPrice" "BAA spread" "GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"];
 p = 2;
