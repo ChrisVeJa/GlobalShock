@@ -1,22 +1,5 @@
 # ===============================================
-# [1] Function that creates code lines.
-# ===============================================
-function gos_creator(df, col::Int64, name, p, h)
-    start = 2 + (col - 1) * 9
-    y = :(convert(
-        Array{Float64},
-        df[:, $start:$start+8][completecases(df[:, $start:$start+8]), :],
-    ))
-    tupname = Symbol.("a2" .* string.(name));
-	tupname = Symbol.("a1" .* string.(name));
-    lines    = name[col];
-    tuplines = tupname[col];
-	errorlines = tupname[col];
-    ex =:(($lines, UU, $tuplines) = GlobalShock.GSstimation($y, p, h, xblock = true, nx = 3))
-    return ex
-end
-# ===============================================
-# [2] Concatenate matrices of diferent countries.
+# [1] Concatenate matrices of diferent countries.
 # ===============================================
 function GScat(input,quint)
 	nf  = nfields(input);
@@ -31,7 +14,7 @@ function GScat(input,quint)
 	return out;
 end
 # ===============================================
-# [3] Function for graphs.
+# [2] Function for graphs.
 # ===============================================
 function GSGraph(model,
 	name,
@@ -148,4 +131,27 @@ function myplot(data,h,mylabel)
         	markerstrokewidth= 0.1
         );
 	return p1;
+end
+# ===============================================
+# [3] HTML tables
+# ===============================================
+
+function ToHtml(file, matt, colnames)
+	io = open(file, "w");
+	println(io,"<table style=","""width:80%""",">");
+	println(io,"<th> ", "h", " </th>")
+	for x in colnames
+		println(io,"<th> ",x, String(" </th>"))
+	end
+	T, cols = size(matt);
+	for i in 1:T
+		println(io,"<tr>")
+		println(io,"<th> ", string(i-1), " </th>")
+		for j in 1:cols
+			println(io,"<th> ", string(matt[i,j]), " </th>")
+		end
+		println(io,"\n</tr>")
+	end
+	println(io,"</table>")
+	close(io);
 end
