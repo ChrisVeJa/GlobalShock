@@ -529,16 +529,17 @@ end
 The order of the variables are:
 g20 >> comm >> baa >> gdp >> cons >> inv >> trade >> reer >> irate
 -------------------------------------------------------------------------- =#
-mec1 = [g20 tot[:,1] baaq ec1 irateq[:,1]];
-mec2 = [g20 tot[:,2] baaq ec2 irateq[:,2]];
-mec3 = [g20 tot[:,3] baaq ec3 irateq[:,3]];
-mec4 = [g20 tot[:,4] baaq ec4 irateq[:,4]];
-mec5 = [g20 tot[:,5] baaq ec5 irateq[:,5]];
-mec6 = [g20 tot[:,6] baaq ec6 irateq[:,6]];
-mec7 = [g20 tot[:,7] baaq dc1 irateq[:,7]];
-mec8 = [g20 tot[:,8] baaq dc2 irateq[:,8]];
-mec9 = [g20 tot[:,9] baaq dc3 irateq[:,9]];
-mec10 = [g20 tot[:,10] baaq dc4 irateq[:,10]];
- dataset = [mec1 mec2 mec3 mec4 mec5 mec6 mec7 mec8 mec9 mec10]
-	return dataset, qlabel,list;
+mec1 = [g20 tot[:,1] baaq ec1 reer[:,1] irateq[:,1]];
+mec2 = [g20 tot[:,2] baaq ec2 reer[:,2] irateq[:,2]];
+mec3 = [g20 tot[:,3] baaq ec3 reer[:,3] irateq[:,3]];
+mec4 = [g20 tot[:,4] baaq ec4 reer[:,4] irateq[:,4]];
+mec5 = [g20 tot[:,5] baaq ec5 reer[:,5] irateq[:,5]];
+mec6 = [g20 tot[:,6] baaq ec6 reer[:,6] irateq[:,6]];
+mec7 = [g20 tot[:,7] baaq dc1 reer[:,7] irateq[:,7]];
+mec8 = [g20 tot[:,8] baaq dc2 reer[:,8] irateq[:,8]];
+mec9 = [g20 tot[:,9] baaq dc3 reer[:,9] irateq[:,9]];
+mec10 = [g20 tot[:,10] baaq dc4 reer[:,10] irateq[:,10]];
+dataset = [mec1 mec2 mec3 mec4 mec5 mec6 mec7 mec8 mec9 mec10]
+dataset = convert(Array{Float64},dataset);
+	return wvar,dataset, qlabel,list;
 end
