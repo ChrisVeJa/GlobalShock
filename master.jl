@@ -12,7 +12,6 @@ using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
 include(".//fcns//GlobalShockDataLoader.jl");
 include(".//fcns//GlobalShocks.jl");
 include(".//fcns//fcns.jl");
-include(".//fcns//ToHtml.jl");
 
 # ===========================================================================
 # 							[1] Introduction
@@ -23,7 +22,7 @@ dir1 = "G:/My Drive/GlobalShocks/data";
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [1.1] Loading Data
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
-wvar,dataset, qlabel, list = GlobalShockDataLoader(dir1);
+wvar, dataset, qlabel, list = GlobalShockDataLoader(dir1);
 
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [1.2 Correlations]
@@ -72,8 +71,15 @@ savefig(".//Figures//intro2.svg");
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
 CoRR2 = cor([umean gd1]);
 display(CoRR2);
-
-
+comprice = dataset[:,[2,11,20,29,38,47,56,65,74,83]];
+corcom   = cor(comprice)
+corvec   = Vector{Float64}(undef,div(ncou*(ncou+1),2)-ncou);
+corvec[1] = corcom[2,1]
+for i in 3:ncou
+	lb = div(((i-1)*(i-2)),2)+1;
+	ub = div((i*(i-1)),2);
+	corvec[lb:ub] = corcom[i,1:i-1];
+end
 # ===========================================================================
 # 							[2] GLOBAL SHOCKS
 # ===========================================================================
