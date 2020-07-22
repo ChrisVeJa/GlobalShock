@@ -11,13 +11,13 @@ include("mainsup.jl")
 function GScomparison(y, p, h)
 	GOS = true
 	nx = 3
-	VarGS = 1:3
+	varGS = 1:3
 	nmodls = 5000
 	Lτ = 1
 	Uτ = 5
 	quint = [0.16 0.50 0.84]
 	nonfun = true
-	pos_tot=2,
+	pos_tot= 2
     # --------------------------------------------------------
     # [2.1.1] VAR in reduce form
     m    = size(y)[2]
@@ -34,7 +34,8 @@ function GScomparison(y, p, h)
     ΔIRF = Array{Float64,3}(undef, m, h, nmodls)
     ΔFEV = Array{Float64,3}(undef, m, h, nmodls)
     for i = 1:nmodls
-        ou1, ou2, ou3 = GSsimulation(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx,varGS)
+        ou1, ou2, ou3 =
+			GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx,varGS)
         #Φ, Γ, ξ_tot
         IRF1, FEV1 = irf_fevd(ou1, ou2, h, m)
 		IRF2, FEV2 = irf_fevd(ou1, ou3, h, m)
@@ -42,12 +43,13 @@ function GScomparison(y, p, h)
         ΔFEV[:, :, i] = FEV1[:, 1, :]- FEV2[:, 1, :]
     end
 	# -------- Means --------
-    ΔIRFmean = dropdims(mean(ΔIRF, dims = 3), dims = 3)
-    ΔFEVmean = dropdims(mean(ΔFEV, dims = 3), dims = 3)
+    #ΔIRFmean = dropdims(mean(ΔIRF, dims = 3), dims = 3)
+    #ΔFEVmean = dropdims(mean(ΔFEV, dims = 3), dims = 3)
 	# -------- Percentiles --------
-    ΔIRFquint = Qntls(ΔIRF, nmodls, quint, m, h)
-    ΔFEVquint = Qntls(ΔFEV, nmodls, quint, m, h)
+    #ΔIRFquint = Qntls(ΔIRF, nmodls, quint, m, h)
+    #ΔFEVquint = Qntls(ΔFEV, nmodls, quint, m, h)
 	# -------------------------
+	return ΔIRF, ΔFEV
 end
 
 # ------------------------------------------------------
@@ -57,6 +59,7 @@ end
 function GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx,varGS)
     # --------------------------------------------------------
     # [2.2.1] Drawing βₙ
+	Xblock = true
     T, m = size(Y)
     σdist = InverseWishart(T, SS)
     b = vec(B)
@@ -84,8 +87,8 @@ function GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx,varGS)
         IRF[:, :, i] = aux_IRF[1:m, 1:m, i] * C1
     end
 	# --------------------------------------------------------
-    # [2.2.4] New Augmented ToT
-	 Λ_tot = Λmatrix(IRF, pos_tot, m; Lτ = Lτ, Uτ = Uτ, Xblock = Xblock, nx = nx)
+    # [2.2.4] New Augmented ToT without Xblock as in Zeev
+	 Λ_tot = Λmatrix(IRF, pos_tot, m; Lτ = Lτ, Uτ = Uτ, Xblock = false, nx = nx)
 	 ξ_tot = eigen(Λ_tot).vectors[:, end:-1:1]
 	 ξ_tot = sign.(diag(ξ_tot))' .* ξ_tot
 	# --------------------------------------------------------
@@ -100,7 +103,7 @@ function GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx,varGS)
     λ = zeros(tvars)
     for i = 1:tvars
         Λ[:, :, i] =
-            Λmatrix(IRF, varGS[i], m; Lτ = 1, Uτ = 5, Xblock = Xblock, nx = nx)
+            Λmatrix(IRF, varGS[i], m; Lτ = 1, Uτ = 5, Xblock = true, nx = nx)
         λ[i] = tr(Λ[:, :, i])
     end
     λ = prod(λ) ./ λ

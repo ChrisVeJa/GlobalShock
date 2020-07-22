@@ -149,7 +149,6 @@ end
 # ===========================================================================
 # 					[4] COMPARISON OF SHOCKS
 # ===========================================================================
-
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [4.1] Impact in macro variables
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
@@ -199,4 +198,19 @@ GraphAux(raw, myname);
 
 cp(".//Figures",".//docs//images//Figures",force=true);
 display("Workout finished")
-mec2.FevGS.Qntls[2]
+
+# ===========================================================================
+# 				[5] COMPARISON OF METHODOLOGIES
+# ===========================================================================
+include(".//fcns//Comparison.jl");
+ΔIRF  = Array{Float64,3}(undef, 9, 40,ncou * 5000)
+ΔFEV  = Array{Float64,3}(undef, 9 ,40,ncou * 5000)
+for i in 1:ncou
+	y = dataset[:,(i-1)*nvar+1:i*nvar];
+	ran = 5000*(i-1)+1:5000*i;
+	ΔIRF[:,:,ran], ΔFEV[:,:,ran] = GSComp.GScomparison(y,2,40)
+end
+ΔIRFQec  = GSComp.Qntls(ΔIRF[:,:,1:6*5000], 6 * 5000, [0.16 0.5 0.84], 9, 40)
+ΔFEVQec  = GSComp.Qntls(ΔFEV[:,:,1:6*5000], 6* 5000, [0.16 0.5 0.84], 9, 40)
+ΔIRFQdc  = GSComp.Qntls(ΔIRF[:,:,6*5000+1:end], 4 * 5000, [0.16 0.5 0.84], 9, 40)
+ΔFEVQdc  = GSComp.Qntls(ΔFEV[:,:,6*5000+1:end], 4* 5000, [0.16 0.5 0.84], 9, 40)
