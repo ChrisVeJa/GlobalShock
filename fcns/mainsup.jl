@@ -137,20 +137,6 @@ end
 # ------------------------------------------------------
 # [3.6] Get quantiles
 # ------------------------------------------------------
-function Qntls4D(x, nmodls, quintls, m, h)
-    xvec = [vec(x[:, :, :, i]) for i = 1:nmodls]
-    xvec = hcat(xvec...)
-    sort!(xvec, dims = 2)
-    indxs = convert(Array{Int64}, floor.(quintls .* nmodls))
-    xqnt = [reshape(xvec[:, indxs[i]], (m, m, h)) for i = 1:length(indxs)]
-    xtup = Tuple(x for x in xqnt)
-    perci = "perct" .* string.(Int.(floor.(quintls * 100)))
-    perci = Symbol.(perci)
-    keys = (:perct1, :perct2, :perct3)
-    xNtup = (; zip(perci, xtup)...)
-    return xNtup
-end
-
 function Qntls(x, nmodls, quintls, m, h)
     xvec = [vec(x[:, :, i]) for i = 1:nmodls]
     xvec = hcat(xvec...)

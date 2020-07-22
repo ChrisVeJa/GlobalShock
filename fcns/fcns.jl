@@ -16,14 +16,7 @@ end
 # ===============================================
 # [2] Function for graphs.
 # ===============================================
-function GSGraph(model,
-	name,
-	labels;
-	colg = :sienna,
-	subdir = "Countries",
-	varI=1,
-	varF = 0,
-)
+function GSGraph(model,	name, labels; colg = :sienna, subdir = "Countries", varI=1, varF = 0)
     nf = nfields(model.FevGS.Qntls)
 	if varF==0
 		varF = size(model.FevGS.Mean)[1];
