@@ -199,3 +199,4 @@ GraphAux(raw, myname);
 
 cp(".//Figures",".//docs//images//Figures",force=true);
 display("Workout finished")
+mec2.FevGS.Qntls[2]
