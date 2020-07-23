@@ -363,9 +363,9 @@ aux1 = convert(Vector{Float64},y[12,17:end]);
 	@rput aux1
 	R" library(seasonal)";
 	R" aux2 = ts(aux1, frequency = 4, start = c(1993, 1))";
-	R" plot(aux2)"
+	#R" plot(aux2)"
 	R" m <- seas(aux2)";
-	R" plot(m)";
+	#R" plot(m)";
 	R" out1 = m$data";
 	@rget out1;
 	out1 = out1[:,3]; # This is the series without seasonal effects
@@ -434,9 +434,9 @@ y  = DataFrame(XLSX.readdata("$dir1/Trimestral.xlsx", "Trimestrales!A2:F86"));
 	@rput aux1
 	R" library(seasonal)";
 	R" aux2 = ts(aux1, frequency = 4, start = c(1998, 1))";
-	R" plot(aux2)"
+	#R" plot(aux2)"
 	R" m <- seas(aux2)";
-	R" plot(m)";
+	#R" plot(m)";
 	R" out1 = m$data";
 	@rget out1;
 	out1 = out1[:,3]; # This is the series without seasonal effects
