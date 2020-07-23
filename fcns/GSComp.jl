@@ -4,6 +4,35 @@
 module GSComp
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributions
 include("mainsup.jl")
+function ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
+    quint = [0.16 0.50 0.84]
+    nc = nfields(dataset)
+    m  = size(dataset[1])[2]
+    ΔIRF = Array{Float32,3}(undef,m,h,nc*nmodls)
+    ΔIRFcoun = Array{Float32,3}(undef,2*m,h,nc)
+    j = 1
+    for y in dataset
+        range = nmodls*(j-1)+1:nmodls*j
+        cout = GScomparison(y,p,h,Lτ, Uτ, nmodls)
+        ΔIRF[:, :, range] = cout
+        Δmn = dropdims(mean(cout, dims=3),dims=3)
+        Δmd = dropdims(median(cout, dims=3),dims=3)
+        ΔIRFcoun[:,:,j] = [Δmn; Δmd]
+        j+=1
+    end
+    g1 = ΔIRF[:, :, 1:cut*nmodls]
+    g2 = ΔIRF[:, :, 1:cut*nmodls+1:end]
+    Δmn1 = dropdims(mean(g1, dims=3),dims=3)
+    Δmd1 = dropdims(median(g1, dims=3),dims=3)
+    Δqt1 = Qntls(g1, nmodls, quint, m, h)
+    Δmn2 = dropdims(mean(g2, dims=3),dims=3)
+    Δmd2 = dropdims(median(g2, dims=3),dims=3)
+    Δqt2 = Qntls(g2, (nc-cut)*nmodls, quint, m, h)
+    ecx = (mean = Δmn1, median = Δmd1, bands = Δqt1)
+    dcx = (mean = Δmn1, median = Δmd1, bands = Δqt1)
+    return ecx, dcx, ΔIRFcoun
+end
+
 function GScomparison(y, p, h, Lτ, Uτ, nmodls)
     nx = 3
     varGS = 1:3

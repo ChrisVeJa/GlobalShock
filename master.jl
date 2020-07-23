@@ -10,7 +10,7 @@
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
 	StatsBase, Distributions, Plots, CSV, RCall, JLD;
 include(".//fcns//GShock.jl");
-#include(".//fcns//Comparison.jl");
+include(".//fcns//GSComp.jl");
 include(".//fcns//fcns.jl");
 include(".//fcns//part1.jl");
 # ===========================================================================
@@ -25,11 +25,10 @@ nrep = 5000
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [1.1] Loading Data (if there is not GSdata.jl run line 28)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
-# wvar, dataset, qlabel, list = GShock.GSDataLoader(dir1);
+# time wvar, dataset, qlabel, list = GShock.GSDataLoader(dir1);
 # save("GSdata.jld", "dataset", dataset, "wvar", wvar,"qlabel", qlabel, "list" , list);
-
-dd = load("GSdata.jld")
-wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"],dd["qlabel"], dd["list"])
+dd = load("GSdata.jld");
+wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"],dd["qlabel"], dd["list"]);
 part1(dataset,wvar);
 dd = nothing
 # ===========================================================================
@@ -40,7 +39,10 @@ dd = nothing
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
 nc = nfields(dataset)
 nv = size(dataset[1])[2]
+Lτ = 1
+Uτ = 5
 bnam = "Country"
+cut = 6
 CouList = bnam .* string.(1:nc) .* ".svg"
 for i in 1:nc
 	y = dataset[i]
@@ -54,8 +56,7 @@ end
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [2.2] Reporting by group of country both GS and NF shocks
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
-
-ecx, dcx  = GSgroups(bnam,1:10,9,40,5000,7);
+ecx, dcx  = GSgroups(bnam,1:nc,nv,h,nrep,cut);
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
 ToHtml("table1.html",round.(ecx.FevGS.Qntls[2][4:end,:]', digits=2),
@@ -99,22 +100,11 @@ raw = cat(ecx.FevGS.Qntls[2][4:end,:], ecx.FevNF.Qntls[2][4:end,:], dims=3);
 GraphAux(raw, ".//Figures//World//CompFEVecx.svg");
 raw = cat(dcx.FevGS.Qntls[2][4:end,:], dcx.FevNF.Qntls[2][4:end,:], dims=3);
 GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
-cp(".//Figures",".//docs//images//Figures",force=true);
-display("Workout finished")
 
-#= ===========================================================================
+
+# ===========================================================================
 # 				[5] COMPARISON OF METHODOLOGIES
 # ===========================================================================
-
-ΔIRF  = Array{Float64,3}(undef, 9, 40,ncou * 5000)
-ΔFEV  = Array{Float64,3}(undef, 9 ,40,ncou * 5000)
-for i in 1:ncou
-	y = dataset[:,(i-1)*nvar+1:i*nvar];
-	ran = 5000*(i-1)+1:5000*i;
-	ΔIRF[:,:,ran], ΔFEV[:,:,ran] = GSComp.GScomparison(y,2,40)
-end
-ΔIRFQec  = GSComp.Qntls(ΔIRF[:,:,1:6*5000], 6 * 5000, [0.16 0.5 0.84], 9, 40)
-ΔFEVQec  = GSComp.Qntls(ΔFEV[:,:,1:6*5000], 6* 5000, [0.16 0.5 0.84], 9, 40)
-ΔIRFQdc  = GSComp.Qntls(ΔIRF[:,:,6*5000+1:end], 4 * 5000, [0.16 0.5 0.84], 9, 40)
-ΔFEVQdc  = GSComp.Qntls(ΔFEV[:,:,6*5000+1:end], 4* 5000, [0.16 0.5 0.84], 9, 40)
-=#
+Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset,p,h,Lτ,Uτ,nrep, cut)
+cp(".//Figures",".//docs//images//Figures",force=true);
+display("Workout finished")
