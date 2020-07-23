@@ -101,7 +101,6 @@ GraphAux(raw, ".//Figures//World//CompFEVecx.svg");
 raw = cat(dcx.FevGS.Qntls[2][4:end,:], dcx.FevNF.Qntls[2][4:end,:], dims=3);
 GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
 
-
 # ===========================================================================
 # 				[5] COMPARISON OF METHODOLOGIES
 # ===========================================================================
@@ -118,7 +117,6 @@ for i in 1:nv
 	bands = (Δdcx.bands[1][i,1:20] - Δdcx.bands[2][i,1:20],	Δdcx.bands[2][i,1:20] - Δdcx.bands[3][i,1:20])
 	plot!(1:20, Δdcx.bands[2][i,1:20],c=:purple, ribbon = bands, fillalpha=0.2,
 		label = :false, w = 1.5, grid= :false, subplot=i, framestyle = :zerolines)
-
 end
 plot(ppl)
 savefig("./Figures/CompIRFDCX.svg")
