@@ -21,7 +21,7 @@ function ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
         j+=1
     end
     g1 = ΔIRF[:, :, 1:cut*nmodls]
-    g2 = ΔIRF[:, :, 1:cut*nmodls+1:end]
+    g2 = ΔIRF[:, :, cut*nmodls+1:end]
     Δmn1 = dropdims(mean(g1, dims=3),dims=3)
     Δmd1 = dropdims(median(g1, dims=3),dims=3)
     Δqt1 = Qntls(g1, nmodls, quint, m, h)

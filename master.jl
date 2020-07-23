@@ -105,6 +105,6 @@ GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
 # ===========================================================================
 # 				[5] COMPARISON OF METHODOLOGIES
 # ===========================================================================
-Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset,p,h,Lτ,Uτ,nrep, cut)
-cp(".//Figures",".//docs//images//Figures",force=true);
+Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset,p,h,Lτ,Uτ,nrep, cut);
+#cp(".//Figures",".//docs//images//Figures",force=true);
 display("Workout finished")
