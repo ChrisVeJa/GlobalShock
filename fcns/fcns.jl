@@ -1,17 +1,44 @@
 # ===============================================
 # [1] Concatenate matrices of diferent countries.
 # ===============================================
-function GScat(input,quint)
-	nf  = nfields(input);
-	aux = input[1];
-	for i in 2:nf
-		aux = cat(aux,input[i],dims=3);
+function GSgroups(name,range,nv,h,nrep,cut)
+	nc = length(range)
+	aux1 = Array{Float32,3}(undef,nv,h,nrep*nc)
+	aux2 = Array{Float32,3}(undef,nv,h,nrep*nc)
+	aux3 = Array{Float32,3}(undef,nv,h,nrep*nc)
+	aux4 = Array{Float32,3}(undef,nv,h,nrep*nc)
+	for i in 1:nc
+		nam = Symbol.(name.* string(i));
+		ex =:(n1 = $nam[3].irfgs);	eval(ex);
+		aux1[:,:,nrep*(i-1)+1:nrep*i] = n1;
+		ex =:(n1 = $nam[3].fevgs); 	eval(ex);
+		aux2[:,:,nrep*(i-1)+1:nrep*i] = n1;
+		ex =:(n1 = $nam[3].irfnf); 	eval(ex);
+		aux3[:,:,nrep*(i-1)+1:nrep*i] = n1;
+		ex =:(n1 = $nam[3].fevnf);  eval(ex);
+		aux4[:,:,nrep*(i-1)+1:nrep*i] = n1;
 	end
-	m,h,nmodls = size(aux);
-	auxM = dropdims(mean(aux, dims = 3), dims = 3);
-	auxQ = GlobalShock.Qntls(aux, nmodls, quint, m, h);
-	out = (Mean = auxM, Qntls = auxQ);
-	return out;
+	reddim(x) = dropdims(mean(x, dims = 3), dims = 3)
+	Qntls  = GShock.Qntls
+	crep = nrep*cut
+	crep2 = nrep*(nc-cut)
+	qq = [0.16 0.50 0.84]
+	g1 = (aux1[:,:,1:crep],aux2[:,:,1:crep],aux3[:,:,1:crep],aux4[:,:,1:crep])
+	g2 = (aux1[:,:,crep+1:end],aux2[:,:,crep+1:end],aux3[:,:,crep+1:end],aux4[:,:,crep+1:end])
+
+	ecx = (
+		IrfGS = (Mean = reddim(g1[1]), Qntls = Qntls(g1[1], crep, qq, nv, h) ),
+		FevGS = (Mean = reddim(g1[2]), Qntls = Qntls(g1[2], crep, qq, nv, h) ),
+		IrfNF = (Mean = reddim(g1[3]), Qntls = Qntls(g1[3], crep, qq, nv, h) ),
+		FevNF = (Mean = reddim(g1[4]), Qntls = Qntls(g1[4], crep, qq, nv, h) ),
+	)
+	dcx = (
+		IrfGS = (Mean = reddim(g2[1]), Qntls = Qntls(g2[1], crep2, qq, nv, h) ),
+		FevGS = (Mean = reddim(g2[2]), Qntls = Qntls(g2[2], crep2, qq, nv, h) ),
+		IrfNF = (Mean = reddim(g2[3]), Qntls = Qntls(g2[3], crep2, qq, nv, h) ),
+		FevNF = (Mean = reddim(g2[4]), Qntls = Qntls(g2[4], crep2, qq, nv, h) ),
+	)
+	return ecx, dcx
 end
 # ===============================================
 # [2] Function for graphs.
