@@ -1,6 +1,7 @@
 # ===============================================
 # [1] Concatenate matrices of diferent countries.
 # ===============================================
+
 function GSgroups(name,range,nv,h,nrep,cut)
 	nc = length(range)
 	aux1 = Array{Float32,3}(undef,nv,h,nrep*nc)

@@ -29,7 +29,7 @@ function ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
     Δmd2 = dropdims(median(g2, dims=3),dims=3)
     Δqt2 = Qntls(g2, (nc-cut)*nmodls, quint, m, h)
     ecx = (mean = Δmn1, median = Δmd1, bands = Δqt1)
-    dcx = (mean = Δmn1, median = Δmd1, bands = Δqt1)
+    dcx = (mean = Δmn2, median = Δmd2, bands = Δqt2)
     return ecx, dcx, ΔIRFcoun
 end
 

@@ -106,5 +106,39 @@ GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
 # 				[5] COMPARISON OF METHODOLOGIES
 # ===========================================================================
 Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset,p,h,Lτ,Uτ,nrep, cut);
-#cp(".//Figures",".//docs//images//Figures",force=true);
+ppl = plot(layout=(3,3), size=(1200,800), title = labels)
+for i in 1:nv
+	bands = (Δecx.bands[1][i,1:20] - Δecx.bands[2][i,1:20],	Δecx.bands[2][i,1:20] - Δecx.bands[3][i,1:20])
+	plot!(1:20, Δecx.bands[2][i,1:20],c=:darkgoldenrod, ribbon = bands, fillalpha=0.2,
+		label = :false, w = 1.5, grid= :false, subplot=i, framestyle = :zerolines)
+end
+savefig("./Figures/CompIRFECX.svg")
+ppl = plot(layout=(3,3), size=(1200,800), title = labels)
+for i in 1:nv
+	bands = (Δdcx.bands[1][i,1:20] - Δdcx.bands[2][i,1:20],	Δdcx.bands[2][i,1:20] - Δdcx.bands[3][i,1:20])
+	plot!(1:20, Δdcx.bands[2][i,1:20],c=:purple, ribbon = bands, fillalpha=0.2,
+		label = :false, w = 1.5, grid= :false, subplot=i, framestyle = :zerolines)
+
+end
+plot(ppl)
+savefig("./Figures/CompIRFDCX.svg")
+ΔIRFcoun = ΔIRFcoun[10:end,:,:];
+anim = @animate  for co in 1:nc
+	ppl = plot(layout=(3,3), size=(1200,800), title = labels)
+	for i in 1:nv
+		if i == 9
+			plot!(1:20, ΔIRFcoun[i,1:20,co], c=colist[co],
+				label = list[co], w = 2.5, grid= :false, alpha=0.8,
+				subplot=i, framestyle = :zerolines, legendfontsize = 10,
+				fg_legend= :transparent, bg_legend= :transparent,
+				legend=:best)
+		else
+			plot!(1:20, ΔIRFcoun[i,1:20,co], c=colist[co], alpha=0.8,
+				label = :false, w = 2.5, grid= :false,
+				subplot=i, framestyle = :zerolines)
+		end
+	end
+end
+gif(anim, "./Figures/IRFdif.gif", fps = 1);
+cp(".//Figures",".//docs//images//Figures",force=true);
 display("Workout finished")
