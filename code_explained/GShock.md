@@ -1,3 +1,4 @@
+```julia
 module GShock
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
 	StatsBase, Distributions, Plots, CSV, RCall;
@@ -195,3 +196,4 @@ function GSsimulation(Y, X, B, SS, p, Lτ, Uτ; Xblock = false, nx = 3, varGS = 
     return β, Φ, Γ, ξ # betas, Companion Form, Identification, Eigenvectors
 end
 end
+```

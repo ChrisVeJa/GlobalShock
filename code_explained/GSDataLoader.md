@@ -1,3 +1,4 @@
+```julia
 ################################################################################
 # GLOBAL SHOCKS: Data maker
 # I will cut every dataset at 2018Q4
@@ -542,3 +543,4 @@ mec10 = convert(Array{Float64},[g20 tot[:,10] baaq dc4 reer[:,10] irateq[:,10]])
 dataset = (mec1, mec2, mec3, mec4, mec5, mec6, mec7, mec8, mec9, mec10)
 return wvar,dataset, qlabel,list;
 end
+```

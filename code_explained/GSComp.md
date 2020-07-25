@@ -1,3 +1,4 @@
+```julia
 ################################################################################
 #  [2] MAIN FUNCTIONS
 ################################################################################
@@ -112,3 +113,4 @@ function GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx, varGS)
     return Φ, Γ, Γcom # Identification, New-augmented
 end
 end
+```

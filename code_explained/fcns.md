@@ -1,3 +1,4 @@
+```julia
 # ===============================================
 # [1] Concatenate matrices of diferent countries.
 # ===============================================
@@ -41,9 +42,11 @@ function GSgroups(name,range,nv,h,nrep,cut)
 	)
 	return ecx, dcx
 end
+```
 # ===============================================
 # [2] Function for graphs.
 # ===============================================
+```julia
 function GSGraph(model,	name, labels; colg = :sienna, subdir = "Countries", varI=1, varF = 0)
     nf = nfields(model.FevGS.Qntls)
 	if varF==0
@@ -76,9 +79,9 @@ function GSGraph(model,	name, labels; colg = :sienna, subdir = "Countries", varI
 	data  = model.IrfNF;
 	ModelGraph(data,nf,varI,varF,name1,labels,colg)
 end
+```
 
-
-
+```julia
 function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	quint = cat(dims = 3, [data.Qntls[i] for i = 1:nf]...)
 	quint = permutedims(quint, [2, 3, 1])
@@ -118,7 +121,8 @@ function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	end
 	savefig(name);
 end
-
+```
+```julia
 function GraphAux(raw, name)
 	nvar = size(raw)[1];
 	h    = size(raw)[2];
@@ -143,7 +147,8 @@ function GraphAux(raw, name)
 	end
 	savefig(name);
 end
-
+```
+```julia
 function myplot(data,h,mylabel)
 	p1 = plot(1:h,data,
         	label=mylabel, color= [:red :slateblue4 :teal :darkgoldenrod],
@@ -156,7 +161,8 @@ end
 # ===============================================
 # [3] HTML tables
 # ===============================================
-
+```
+```julia
 function ToHtml(file, matt, colnames)
 	io = open(file, "w");
 	println(io,"<table style=","""width:80%""",">");
@@ -176,3 +182,4 @@ function ToHtml(file, matt, colnames)
 	println(io,"</table>")
 	close(io);
 end
+```
