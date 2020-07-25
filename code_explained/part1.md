@@ -1,4 +1,5 @@
-using juno
+
+```julia
 function part1(dataset, wvar)
 	display(cor(wvar););
 	#= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -29,7 +30,8 @@ function part1(dataset, wvar)
 	    	legendfontsize=7, legend=:bottomleft);
 	plot!(1:tt,gd1, c=:red, w = 1.25, alpha = 0.85, label= "G20 output");
 	savefig(".//Figures//intro2.svg");
-
+	```
+	```julia
 	#= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	[1.5 Correlations]
 	+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
@@ -43,16 +45,4 @@ function part1(dataset, wvar)
 		xlabel = "Correlation", lc = :black);
 	savefig(".//Figures//histogram.svg");
 end
-#=	for i in 1:nc
-	    start = 1 + nv*(i-1);
-	    y = dataset[:, start:nv*i];
-		model1, Uaux, _tup1 =
-	    GShock.GSstimation(y, p, h, VarGS = 2, NF = false, nmodls = 1000);
-	    tt = length(Uaux);
-	    U[end+1-tt:end,i] = Uaux;
-	end
-
-	umean = [mean(U[i,:][.!isnan.(U[i,:])]) for i in 4:nq];
-	umax  = [maximum(U[i,:][.!isnan.(U[i,:])]) for i in 4:nq];
-	umin  = [minimum(U[i,:][.!isnan.(U[i,:])]) for i in 4:nq];
-=#
+```
