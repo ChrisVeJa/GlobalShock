@@ -147,7 +147,7 @@ end
 
 function myplot(data,h,mylabel)
 	p1 = plot(1:h,data,
-        	label=mylabel, color= [:red :slateblue4 :red :slateblue4],
+        	label=mylabel, color= [:red :blue :red :blue],
         	markersize = 2.5, markershape = [:none :none :x :x],
         	w = [2 2 0.1 0.1], style = [:solid :dash :dot :dot],
         	markerstrokewidth= 0.1, fg_legend = :transparent,
