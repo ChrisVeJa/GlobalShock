@@ -1,8 +1,6 @@
-```julia
-# ===============================================
-# [1] Concatenate matrices of diferent countries.
-# ===============================================
+## [1] Creating the groups of countries
 
+```julia
 function GSgroups(name,range,nv,h,nrep,cut)
 	nc = length(range)
 	aux1 = Array{Float32,3}(undef,nv,h,nrep*nc)
@@ -43,9 +41,8 @@ function GSgroups(name,range,nv,h,nrep,cut)
 	return ecx, dcx
 end
 ```
-# ===============================================
-# [2] Function for graphs.
-# ===============================================
+## [2] Graphics
+
 ```julia
 function GSGraph(model,	name, labels; colg = :sienna, subdir = "Countries", varI=1, varF = 0)
     nf = nfields(model.FevGS.Qntls)
@@ -58,26 +55,22 @@ function GSGraph(model,	name, labels; colg = :sienna, subdir = "Countries", varI
     if ~isdir(".//Figures//$subdir")
         mkdir(".//Figures//$subdir");
     end
-    # ----------------------------------
     # FEVD GLOBAL shocks
-	name1 = ".//Figures//$subdir//FEV_" * name;
-	data  = model.FevGS;
-	ModelGraph(data,nf,varI,varF,name1,labels,colg)
-	# ----------------------------------
+    name1 = ".//Figures//$subdir//FEV_" * name
+    data  = model.FevGS
+    ModelGraph(data,nf,varI,varF,name1,labels,colg)
     # IRF GLOBAL SHOCKS
-	name1 = ".//Figures//$subdir//IRF_" * name;
-	data  = model.IrfGS;
-	ModelGraph(data,nf,varI,varF,name1,labels,colg)
-	# ----------------------------------
-    # FEVD Non Fundamental shocks
-	name1 = ".//Figures//$subdir//FEVNF_" * name;
-	data  = model.FevNF;
-	ModelGraph(data,nf,varI,varF,name1,labels,colg)
-	# ----------------------------------
+    name1 = ".//Figures//$subdir//IRF_" * name
+    data  = model.IrfGS
+    ModelGraph(data,nf,varI,varF,name1,labels,colg)
+    # FEVD Non Fundamental 
+    shocksname1 = ".//Figures//$subdir//FEVNF_" * name
+    data  = model.FevNF
+    ModelGraph(data,nf,varI,varF,name1,labels,colg)
     # IRF Non Fundamental SHOCKS
-	name1 = ".//Figures//$subdir//IRFNF_" * name;
-	data  = model.IrfNF;
-	ModelGraph(data,nf,varI,varF,name1,labels,colg)
+    name1 = ".//Figures//$subdir//IRFNF_" * name
+    data  = model.IrfNF
+    ModelGraph(data,nf,varI,varF,name1,labels,colg)
 end
 ```
 
@@ -123,32 +116,6 @@ function ModelGraph(data,nf,varI,varF,name,labels,colg)
 end
 ```
 ```julia
-function GraphAux(raw, name)
-	nvar = size(raw)[1];
-	h    = size(raw)[2];
-	plot(legendfontsize=6,layout=(2,3),size=(1200,800),title =["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"])
-	for i in 1:nvar
-	        data = raw[i,:,:];
-	        if i!=2
-	                plot!(1:h,data, label="",
-	                        color= [:teal :darkgoldenrod], markersize = 3.5,
-	                        markershape = [:none :circ], w = [2 0.1],
-	                        style = [:solid :dot],markerstrokewidth= 0.1,
-	                        subplot = i,
-	                );
-	        else
-	                plot!(1:h,data, label=["Global Shock" "Non-fun ECX"],
-	                        color= [:teal :darkgoldenrod], markersize = 3.5,
-	                        markershape = [:none :circ ], w = [2 0.1],
-	                        style = [:solid :dot],markerstrokewidth= 0.1,
-	                        subplot=i,
-	                );
-	        end
-	end
-	savefig(name);
-end
-```
-```julia
 function myplot(data,h,mylabel)
 	p1 = plot(1:h,data,
         	label=mylabel, color= [:red :slateblue4 :teal :darkgoldenrod],
@@ -158,10 +125,9 @@ function myplot(data,h,mylabel)
         );
 	return p1;
 end
-# ===============================================
-# [3] HTML tables
-# ===============================================
 ```
+## [3] HTML tables
+The following code creates a file `name.html` which print a matrix `matt` with the name `colnames` in html format
 ```julia
 function ToHtml(file, matt, colnames)
 	io = open(file, "w");
