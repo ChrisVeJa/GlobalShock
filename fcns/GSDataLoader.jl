@@ -536,7 +536,6 @@ for i = 1:Tmonth
     end
 end
 Δipcq = Δipcq[17:end,:]
-display(Δipcq)
 rrateq = irateq - Δipcq
 #= ------------------------------------------------------------------------
 	CREATING THE DATASET

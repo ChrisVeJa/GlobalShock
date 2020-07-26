@@ -25,10 +25,10 @@ nrep = 5000
 #= +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 [1.1] Loading Data (if there is not GSdata.jl run line 28)
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ =#
-wvar, dataset, qlabel, list = GShock.GSDataLoader(dir1);
-#save("GSdata.jld", "dataset", dataset, "wvar", wvar,"qlabel", qlabel, "list" , list);
-#dd = load("GSdata.jld");
-#wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"],dd["qlabel"], dd["list"]);
+wvar, dataset, qlabel, list = GShock.GSDataLoader(dir1)
+save("GSdata.jld", "dataset", dataset, "wvar", wvar,"qlabel", qlabel, "list" , list);
+dd = load("GSdata.jld");
+wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"],dd["qlabel"], dd["list"]);
 part1(dataset,wvar);
 dd = nothing
 # ===========================================================================
