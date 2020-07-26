@@ -1,5 +1,14 @@
 ## [1] Creating the groups of countries
+In this code we create a matrix with the mean and quintiles for a group de countries.
 
+The arguments of this functions are:
+
+	[1] name:  It is the prefix that works as base for the models, ideally it should be string type
+	[2] range: It is the range for the name models
+	[3] nv:	   Number of variables in the model
+	[4] h:	   Horizon for IRF and FEVD
+	[5] nrep:  Number of replications in each model
+	[6] cut:   Number of countries in the first group
 ```julia
 function GSgroups(name,range,nv,h,nrep,cut)
 	nc = length(range)
