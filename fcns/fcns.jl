@@ -119,25 +119,26 @@ function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	savefig(name);
 end
 
-function GraphAux(raw, name)
+function GraphAux(raw)
 	nvar = size(raw)[1];
 	h    = size(raw)[2];
-	plot(legendfontsize=6,layout=(2,3),size=(1200,800),title =["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"])
+	p = plot(legendfontsize=10,layout=(2,3),size=(1200,800),title =["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"])
 	for i in 1:nvar
 	        data = raw[i,:,:];
 	        if i!=2
 	                plot!(1:h,data, label="",
-	                        color= [:teal :darkgoldenrod], markersize = 3.5,
-	                        markershape = [:none :circ], w = [2 0.1],
+	                        color= [:red :slateblue4], markersize = 3.5,
+	                        markershape = [:none :x], w = [2 0.1],
 	                        style = [:solid :dot],markerstrokewidth= 0.1,
-	                        subplot = i,
+	                        subplot = i, grid = :false,
 	                );
 	        else
-	                plot!(1:h,data, label=["Global Shock" "Non-fun ECX"],
-	                        color= [:teal :darkgoldenrod], markersize = 3.5,
-	                        markershape = [:none :circ ], w = [2 0.1],
+	                plot!(1:h,data, label=["Global Shock" "Non-fundamental"],
+	                        color= [:red :slateblue4], markersize = 3.5,
+	                        markershape = [:none :x ], w = [2 0.1],
 	                        style = [:solid :dot],markerstrokewidth= 0.1,
-	                        subplot=i,
+	                        subplot=i, fg_legend = :transparent,
+							bg_legend = :transparent, grid = :false,
 	                );
 	        end
 	end
@@ -146,10 +147,11 @@ end
 
 function myplot(data,h,mylabel)
 	p1 = plot(1:h,data,
-        	label=mylabel, color= [:red :slateblue4 :teal :darkgoldenrod],
-        	markersize = 3.5, markershape = [:none :none :x :circ],
+        	label=mylabel, color= [:red :slateblue4 :red :slateblue4],
+        	markersize = 2.5, markershape = [:none :none :x :x],
         	w = [2 2 0.1 0.1], style = [:solid :dash :dot :dot],
-        	markerstrokewidth= 0.1
+        	markerstrokewidth= 0.1, fg_legend = :transparent,
+			bg_legend = :transparent,
         );
 	return p1;
 end
