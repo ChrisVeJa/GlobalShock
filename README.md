@@ -1,7 +1,93 @@
-## **GLOBAL SHOCKS: Heterogeneous effect in small open economies**
+# **GLOBAL SHOCKS: Heterogeneous effect in small open economies**
 
-#####Written by: Christian Velasquez
-#####Any comment, doubt or suggestion just send me an email to velasqcb@bc.edu
+## [1] List of codes
+
+### [1.1] Creating the groups of countries
+In this code we create a matrix with the mean and quintiles for a group de countries.
+```julia
+ecx, dcx =  GSgroups(name,range,nv,h,nrep,cut)
+```
+where `ecx`, `dcx` are NamedTuple with fields:
+- `IrfGS` : response of each variable for a global shock
+- `FevGS` : contribuion of global shocks to the FEV
+- `IrfNF` : response of each variable for a non fundamental shock
+- `FevNF` : contribuion of non-fundamental shocks to the FEV
+
+with the arguments
+- `name`: prefix that works as base for the models,
+- `range`: range for the name models
+- `nv`: number of variables
+- `h`: Horizon for IRF and FEVD
+- `nrep`: number of replications in each model
+- `cut`: number of countries in the first group
+
+### [1.2] Graphics
+```julia
+GSGraph(model, name, labels; colg =:sienna, subdir="Countries", varI=1, varF = 0)
+```
+```julia
+ModelGraph(data,nf,varI,varF,name,labels,colg)
+```
+```julia
+p1 = myplot(data,h,mylabel)
+```
+### [1.3] HTML tables
+The following code creates a file `name.html` which print a matrix `matt` with the name `colnames` in html format
+```julia
+ToHtml(file, matt, colnames)
+```
+### [1.4] Module GShock
+####  [1.4.1] STRUCTURES FOR CONTAINERS
+
+- `Param`
+  - `B` : Estimated βs
+  - `Σ` : Variance Covariance matrix
+  - `Γ` : Median of identificacion matrix
+  - `ξ` : Median of Eigenvectors
+- `Post`
+  - `Mean` : Average
+  - `Qntld`: Percentiles
+- `GSsolve`
+  - `Par`: Estimated parameters
+  - `IrfGS`: Impulse response function
+  - `FevGS`: Forecast Error Variances decomposition
+  - `IrfNF`: Impulse response function Non fundamental
+  - `FevNF`: Forecast Error Variances decomposition Non fundamental
+
+```julia
+gsolve::GSsolve, U, m::Tuple= GSstimation(y, p, h;
+	xblock= false,
+	GOS   = true,
+	nx    = 0,
+	VarGS = 1:3,
+	nmodls= 5000,
+	quint = [0.16 0.50 0.84],
+	NF    = true,
+	Lτ = 1, Uτ = 5,
+)
+```
+```julia
+β, Φ, Γ, ξ = GSsimulation(Y, X, B, SS, p, Lτ, Uτ;
+	Xblock = false,
+	nx     = 3,
+	varGS  = 1:3,
+	nonfun = true)
+```
+
+
+### [1.4] Module GSComp
+```julia
+ecx, dcx, ΔIRFcoun = ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
+```
+```julia
+ΔIRF =  GScomparison(y, p, h, Lτ, Uτ, nmodls)
+```
+```julia
+Φ, Γ, Γcom = GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx, varGS)
+```
+```
+
+#####################################################################
 
 Libraries
 ```julia
@@ -119,7 +205,3 @@ gif(anim, "./Figures/IRFdif.gif", fps = 1);
 cp(".//Figures",".//docs//images//Figures",force=true);
 display("Workout finished")
 ```
-
-
-
-
