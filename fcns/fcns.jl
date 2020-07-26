@@ -119,7 +119,7 @@ function ModelGraph(data,nf,varI,varF,name,labels,colg)
 	savefig(name);
 end
 
-function GraphAux(raw)
+function GraphAux(raw,name)
 	nvar = size(raw)[1];
 	h    = size(raw)[2];
 	p = plot(legendfontsize=10,layout=(2,3),size=(1200,800),title =["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"])
