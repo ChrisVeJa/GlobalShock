@@ -20,7 +20,7 @@
 \renewcommand{\footrulewidth}{0pt}
 
 
-\title{\textbf{Global optimism shocks for small open economies: Methodological appendix}}
+\title{\textbf{Global optimism shocks, heterogeneous effects in small open economies: Methodological appendix}}
 \author{Velasquez, C.}
 %\affil{Central Reserve Bank of Peru}
 \date{}
@@ -30,172 +30,130 @@
 
 \maketitle
 
-\section{The Uhlig's procedure}
-In this section as an introduction to the global optimism identification we present the procedure used in Uhlig (2003) to identify anticipated shocks and extend it considering an exogenous block that is relevant to analyse small open economies.
+\section{Medium Run identification}
+In this section as an introduction to the global optimism identification we present the procedure used in Uhlig (2003) to identify anticipated shocks and a modification considering an exogenous block that is relevant to analyse small open economies.
  \subsection{The model}
- To make easier the algebra, we assume a VAR with N variables ( $n^*$ external variables, and $n$ domestic variables),an exogenous block, and 1 lag. Its reduce form is:
+ To make easier the algebra, we assume a VAR with N variables ( $n^f$ external variables, and $n^d$ domestic variables),an exogenous block. Its reduce form is:
 	\begin{equation}
 	   \begin{aligned}
-	     \left[ \begin{array}{c}  y^{(e)}_t  \\ y^{(d)}_t \end{array} \right]
+	     \left[ \begin{array}{c}  y^{f}_t  \\ y^{d}_t \end{array} \right]
 	    =
-      	\left[ \begin{array}{cc}  F_{ee}^{(1)} & 0 \\ F_{de}^{(1)} & F_{dd}^{(1)} \end{array} \right]
-		\left[ \begin{array}{c}  y^{(e)}_{t-1}  \\ y^{(d)}_{t-1}  \end{array} \right]
+      	\left[ \begin{array}{cc}  F_{ff} & 0 \\ F_{df} & F_{dd} \end{array} \right]
+		\left[ \begin{array}{c}  y^{f}_{t-1}  \\ y^{d}_{t-1}  \end{array} \right]
 	 	+
-    	\left[ \begin{array}{c}  u^e_{t}  \\ u^d_{t}  \end{array} \right]
+    	\left[ \begin{array}{c}  u^f_{t}  \\ u^d_{t}  \end{array} \right]
 	  \end{aligned}
 	\end{equation} \\
-	The reduced errors, $u^e_{t}$ and $u^d_{t}$ are normally distributed with a variance-covariance matrix $\Sigma$. \\
-	The respective \textit{orthogonalized} representation of the last system is:
+	The reduced errors, $u^e_{t}$ and $u^d_{t}$ are normally distributed with a variance-covariance matrix $\Sigma$. After applying and orthogonalization by cholesky decomposition:
 	\begin{equation}
 	   \begin{aligned}
-	     \left[ \begin{array}{c}  y^{(e)}_t  \\ y^{(d)}_t \end{array} \right]
+	     \left[ \begin{array}{c}  y^{f}_t  \\ y^{d}_t \end{array} \right]
 	    & =
-		\left[ \begin{array}{cc}  F_{ee}^{(1)} & 0 \\ F_{de}^{(1)} & F_{dd}^{(1)} \end{array} \right]
-		\left[ \begin{array}{c}  y^{(e)}_{t-1}  \\ y^{(d)}_{t-1}  \end{array} \right]
+		\left[ \begin{array}{cc}  F_{ff} & 0 \\ F_{df} & F_{dd}\end{array} \right]
+		\left[ \begin{array}{c}  y^{f}_{t-1}  \\ y^{d}_{t-1}  \end{array} \right]
 	 	+
-    	\left[ \begin{array}{cc}  C_{ee}^{(1)} & 0 \\ C_{de}^{(1)} & C_{dd}^{(1)} \end{array} \right]  *\left[ \begin{array}{c}  \epsilon^e_{t}  \\ \epsilon^d_{t}  \end{array} \right]  \\
+    	\left[ \begin{array}{cc}  C_{ff} & 0 \\ C_{df} & C_{dd}\end{array} \right]  *\left[ \begin{array}{c}  \epsilon^f_{t}  \\ \epsilon^d_{t}  \end{array} \right]  \\
 	   Y_t & = F Y_{t-1} + C E_t
 	\end{aligned}
 	\end{equation} \\
-Both, $\epsilon^e_{t}$ and $\epsilon^d_{t}$ are \textit{orthogonal} errors distributed as a multivariate normal with mean 0 and a variance-covariance matrix I. Matrix C satisfies the restriction $CC' = \Sigma$, for convenience the matrix C could be obtained from a Cholesky decomposition. \\
-One useful post-estimation tool of VAR models is the forecast error variance decomposition (FEVD), which is obtained following next step. The forecast error will be:
+Both, $\epsilon^e_{t}$ and $\epsilon^d_{t}$ are \textit{orthogonal} errors distributed as a multivariate normal with mean 0 and the identity as variance-covariance. The forecast error will be:
 \begin{equation*}
-\begin{aligned}
-	Y_{t+h} & = F^h Y_t + \sum_{i=0}^h F^{i} C e_{t+h-i}\\
-	Y_{t+h}  - E[T_{t+h}|t]& = \sum_{i=0}^h F^{i} C e_{t+h-i} \\
-	 & = \sum_{i=0}^h R_{i} e_{t+h-i}
-\end{aligned}
+	Y_{t+h}  - E[T_{t+h}|t]& = \sum_{i=0}^h F^{i} C e_{t+h-i} = \sum_{i=0}^h R_{i} e_{t+h-i}
 \end{equation*}
-The matrix $R_i$ represents the impulse-response matrix $i$ periods ahead, with a Cholesky identification. Then, the forecast variance error is:
+The matrix $R_i$ is the reduce-form impulse-response matrix $i$ periods ahead. Then, the forecast variance error is:
 \begin{equation}
 	 \Omega^{(h)} = \sum_{i=0}^h R_{i} R'_{i}
 \end{equation}
 The diagonal of $\Omega$ registers the forecast error variance $h-step$ ahead for each variable of the system.
-\subsection{The Uhlig's identification scheme}
-Th scheme of identification of Uhlig, also known as medium-run identification starts realizing that $E = D E^1$ while $DD' = I$. It means that any new identification matrix C*D will be observationally equivalent to the base model if D satisfies the aforementioned condition. It implies that:
+\subsection{Identification of \textit{augmented}-anticipated shock}
+Any new identification matrix D will be observationally equivalent to the base model while D satisfies the condition $D'D=I$, implying:
 \begin{equation*}
-	 \Omega = \sum_{i=0}^h R_{i}D D' R'_{i}
+	 \Omega^{(h)} = \sum_{i=0}^h R_{i}D D' R'_{i}
 \end{equation*}
-A second fact is that $\Omega$ can be decomposed into the contribution of  its drivers as follow:
+On the other hand, we can decompose $\Omega$ into the contribution of each identified shock by the impulse column vector $\gamma_j$
 \begin{equation}{\label{eq:n2}}
-	 \Omega = \sum_{i=0}^h \sum_{j=1}^{j=n} R_{i}\gamma_j \gamma_j' R'_{i}
+	 \Omega^{(h)} = \sum_{i=0}^h \sum_{j=1}^{j=n} R_{i}\gamma_j \gamma_j' R'_{i}
 \end{equation}
-The equation \ref{eq:n2} decomposes that FEV in the contribution of each structural shock identified through $\gamma_j$ (the index represents the j-column in the matrix D). Commonly, this vector is called a vector identification. The original problem finds a identification vector $\gamma$ which maximizes the contribution of the j- structural shock in the accumulated forecast error variance (S) matrix between the periods $[\underline{\tau}, \overline{\tau}]$.\\
-To solve the above describe problem, first we define $S$ as:
+The problem consits in finding the identification vector $\gamma$ which maximizes the contribution of the j- structural shock in the accumulated forecast error variance (S) for an
+specific variable $k$ between the periods $[\underline{\tau}, \overline{\tau}]$. To solve it, first we define the portion of S explained by a given structural shock $j$ as:
 \begin{equation}
-	 S(\underline{\tau},\overline{\tau}) =  \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h \sum_{j=1}^{j=n} R_{i}\gamma_j \gamma_j' R'_{i}
+S(\underline{\tau},\overline{\tau}|j) =  \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h R_{i}\gamma_j \gamma_j' R'_{i}
 \end{equation}
-The contribution of a given structural shock $j$ identified by $\gamma_j$ is:
-\begin{equation}
-S(\underline{\tau},\overline{\tau}|j) =  \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h R_{i}\gamma \gamma' R'_{i}
-\end{equation}
-The goal in Uhlig's problem is maximizing the contribution of a $j$ structural shock in the accumulated forecast variance of a external variable $k$, then we need to extract the $kxk$ position of $S(\underline{\tau},\overline{\tau}|j)$. We can write the problem as:
+Setting the maximization problem for the variable $k$:
 \begin{equation}\label{eq:n1}
 \begin{aligned}
 & \gamma^* &= \underset{\gamma}{\text{argmax}}
 & \left(\sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h R_{i}\gamma \gamma' R'_{i} \right)_{kk}\\
 & \text{s.t.}
 &  & \gamma' \gamma = 1 \\
-&  & & \gamma(z)  = 0 \quad \forall \ z>n^*
+&  & & \gamma(z)  = 0 \quad \forall \ z>n^f
 \end{aligned}
 \end{equation}
-The first condition allows to identify $\gamma$. The second restriction ensures that only external variables explain the forecast variance of $k$ ($n^*$ is the number of external variables in the base model). A discussion about this point will be develop at the end of this section. \\
-A way to make easier (\ref{eq:n1}) is defining a matrix $G_{NxN}$ of zeros with 1 in the $kxk$ position, and using the trace operator and its properties. Then:
+The first condition allows to identify $\gamma$. The second one ensures that only external variables explain the forecast variance of $k$. A way to make easier (\ref{eq:n1}) is defining a matrix $G_{NxN}$ of zeros with 1 in the $kxk$ position, and using the trace operator, then:
 \begin{equation*}
-\begin{aligned}
-\left(\sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h R_{i}\gamma \gamma' R'_{i} \right)_{kk} & = \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h tr(G R_{i}\gamma \gamma' R'_{i} G') \\
-& = \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h \underbrace{tr(\gamma' R'_{i} G'G R_{i}\gamma )}_{scalar} \\
-& = \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h \gamma' R'_{i} G'G R_{i}\gamma \\
-& = \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  R'_{i} G'G R_{i} \right) \gamma \\
-& = \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  (G R_{i})'(G R_{i}) \right) \gamma
-\end{aligned}
+\left(\sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h R_{i}\gamma \gamma' R'_{i} \right)_{kk}  = \sum_{h = \underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h tr(G R_{i}\gamma \gamma' R'_{i} G') = \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  (G R_{i})'(G R_{i}) \right) \gamma
 \end{equation*}
-It is easy to verify that $(G R_{i})'(G R_{i}) = R^{'(k)}_i*R^{(k)}_i$, where $R^{(k)}$ represents the k-row of matrix $R_i$. On the other hand. the above equation can be re-expressing as:
+Defining $R^{(k)}$ as the k-row of matrix $R_i$.
 \begin{equation*}
 \begin{aligned}
 \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  (G R_{i})'(G R_{i}) \right) \gamma &= \gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  R^{'(k)}_i R^{(k)}_i \right) \gamma \\
 &= \gamma' \underbrace{\left(\sum_{i=0}^H (\overline{\tau}+1-max(\underline{\tau},i)) R^{'(k)}_iR^{(k)}_i \right)}_{\Lambda} \gamma
 \end{aligned}
 \end{equation*}
-Finally, the Uhlig's problem is:
+Finally, the system could be re-written as:
 \begin{equation*}
 \begin{aligned}
 & \gamma^* &= \underset{\gamma}{\text{argmax}}  \quad
 & \gamma' \Lambda  \gamma \\
 & \text{s.t.}
 &  & \gamma' \gamma = 1 \\
-&  & & \gamma(z)  = 0 \quad \forall \ z>n^*
+&  & & \gamma(z)  = 0 \quad \forall \ z>n^f
 \end{aligned}
 \end{equation*}
-After plant the Lagrangian it is easy to see that the solution is similar to a eigenvalue equation,  therefore we need to find the eigenvector related to the maximum eigenvalue of $\Lambda^*$ which is a submatrix of $\Lambda$ that includes the first $n*$ rows and columns. \\
-It is easy to see that this expression is valid for both, a period of truncation or just a point of truncation. For the later, we have to define $\underline{\tau} = \overline{\tau}$ turning $\Lambda$ into:
-\begin{equation*}
-\Lambda = \sum_{i=0}^{\overline{\tau}} R^{'(k)}_iR^{(k)}_i
-\end{equation*}
-Regarding the second restriction, we expand the expression $\gamma' \left( \sum_{h =\underline{\tau}}^{\overline{\tau}}\sum_{i=0}^h  R_{i}^{'(k)}R_{i}^{(k)} \right) \gamma$, without the sum operator, and considering the fact the each k-variable is an external variable:
+The solution of this problem is the eigenvector related to the maximum eigenvalue for $\Lambda^f$ which is a submatrix of $\Lambda$ that includes the first $n^f$ rows and columns. \\
+Regarding the second restriction, after expand the last expression for the external variables in a h-step ahead
 \begin{equation*}
 \begin{aligned}
-R^{'(k)}_i\gamma' \gamma R_i^{(k)} &= \left[ \begin{array}{c}  C_{ee}^{'(i)}  \\ 0 \end{array} \right] \left[ \begin{array}{cc}  \gamma'_e & \gamma'_d  \end{array} \right] \left[ \begin{array}{c}  \gamma_e  \\ \gamma_d  \end{array} \right]
-\left[ \begin{array}{cc}  C_{ee}^{(i)} &  0 \end{array} \right] \\
- &= \left[ \begin{array}{cc} C^{'(i)}_{ee}\gamma'_e & C^{'(i)}_{ee}\gamma'_d  \\ 0 & 0 \end{array} \right]
- \left[ \begin{array}{cc} \gamma_e C^{(i)}_{ee} & 0  \\ \gamma_d C^{(i)}_{ee} & 0 \end{array} \right] \\
- &= \left[ \begin{array}{cc} C^{'(i)}_{ee}\gamma'_e \gamma_e C^{(i)}_{ee} + C^{'(i)}_{ee}\gamma'_d \gamma_d C^{(i)}_{ee}  & 0 \\ 0 & 0 \end{array} \right]
+R^{'(k)}_i\gamma' \gamma R_i^{(k)} &= \left[ \begin{array}{c}  C_{ff}^{'(h)}  \\ 0 \end{array} \right] \left[ \begin{array}{cc}  \gamma'_f & \gamma'_d  \end{array} \right] \left[ \begin{array}{c}  \gamma_f  \\ \gamma_d  \end{array} \right]
+\left[ \begin{array}{cc}  C_{ff}^{(h)} &  0 \end{array} \right] \\
+&= \left[ \begin{array}{cc} C^{'(h)}_{ff}\gamma'_f \gamma_f C^{(h)}_{ff} + C^{'(h)}_{ff}\gamma'_d \gamma_d C^{(h)}_{dd}  & 0 \\ 0 & 0 \end{array} \right]
 \end{aligned}
 \end{equation*}
-It is obvious that the previous matrix has a reduce rank ($n^*$), so we need to include $n$ additional restriction over $\gamma$. In this way, a valid restriction is consider $\gamma_d equal$ as a zero vector. Therefore, these restrictions allow us to achieve a exact identification, and the relevant matrix to solve the problem, will be the sub-matrix of the first $n^*$ rows and columns.
-\clearpage
-\section{The Global Optimism methodology}
-Since the work of Uhlig (2003) medium run identification has been used to identify effects of productivity and recently in anticipated shocks. This methodology finds an identification vector ($\gamma$) that allows to extract a structural shock with a maximum participation in fluctuations over a period $[\underline{\tau}:\overline{\tau}]$ of an objective variable. \\
-We extend this methodology to obtain a vector $\gamma$ which maps structural shocks with maximal participation in N variables fluctuations (in this case, we consider external variable). \\
-Defining $S^{i}(\underline{\tau},\overline{\tau}|j)$ the forecast variance of the i-variable explained by the $j$ structural shock over the span $[\underline{\tau}:\overline{\tau}]$ we can modify the maximization problem of Uhlig as:
+The reduce rank makes us to include $n$ additional restriction over $\gamma$, being natural to assume $\gamma_d$ equal to 0.
+\section{Global Shocks identification}
+I extend the previous methodology to obtain a vector $\gamma$ which maps structural shocks that explain at maximum the forecastability in a group of variables, - the external ones in this case. \\
+Defining $S^{i}(\underline{\tau},\overline{\tau}|j)$ the forecast variance of the i-variable explained by the $j$ structural shock over the period-time $[\underline{\tau}:\overline{\tau}]$ we can modify the original problem into:
 \begin{equation*}
 \begin{aligned}
 & \gamma^* &= \underset{\gamma}{\text{argmax}}  \quad
 &  \sum_i^{n^*}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})} \\
 & \text{s.t.}
 &  & \gamma' \gamma = 1 \\
-&  & & \gamma(z)  = 0 \quad \forall \ z>n^*
+&  & & \gamma(z)  = 0 \quad \forall \ z>n^f
 \end{aligned}
 \end{equation*}
-Clearly, our objective is to find a identification vector with a maximal joint participation  in the forecast variance of all the $N^*$ external variables. It can be seem as recovering the underlying driver of the global economy, hence we call it as the global optimism strategy.\\
-The first restriction $\gamma' \gamma = 1$ is an orthogonality condition to ensure that new identification will be observationally equivalent to the original estimation. The second restriction is made to identify the exogenous block. In contrast with Barsky \& Sims (2011) this condition does not involve a restriction about the contemporaneous effect of anticipated shock over real variables, instead it implies that external variable are the sources of their forecast error variance.\\
+It can be seem as recovering the underlying driver of the global economy, hence we call it as the global shock. The restrictions has the same goal as before.
 Rewriting the problem:
 \begin{equation*}
-\begin{aligned}
 \sum_i^{n^*}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
- &=  \sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
-\end{aligned}
-\end{equation*}
-Finding the common denominator:
-\begin{equation*}
-\begin{aligned}
-\sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
-&=
-\frac{\sum_i^{n^*} \left( \prod_{j=1,j\neq i}^{n^*} S^{i}(\underline{\tau},\overline{\tau})\right) \left( \gamma' \Lambda^{(i)} \gamma \right)}{\prod_i^{n^*} S^{i}(\underline{\tau},\overline{\tau})}
-\end{aligned}
-\end{equation*}
-We realize that $\gamma$ are independent of the sum, and since the denominator is common we can retire it form the maximization.
-\begin{equation*}
-\begin{aligned}
-\sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
-& \propto
-\gamma' \left( \sum_i^{n^*} \left( \prod_{j=1,j\neq i}^{n^*}  S^{i}(\underline{\tau},\overline{\tau})\right) \Lambda^{(i)} \right) \gamma = \gamma' \xi  \gamma
-\end{aligned}
+ =  \sum_i^{n^*}\frac{\gamma' \Lambda^{(i)} \gamma}{S^{i}(\underline{\tau},\overline{\tau})}
+ =   \frac{\sum_i^{n^*} \left( \prod_{j=1,j\neq i}^{n^*} S^{i}(\underline{\tau},\overline{\tau})\right) \left( \gamma' \Lambda^{(i)} \gamma \right)}{\prod_i^{n^*} S^{i}(\underline{\tau},\overline{\tau})}
+= \gamma' \xi  \gamma
 \end{equation*}
 Therefore, the problem is:
 \begin{equation*}
 \begin{aligned}
-\gamma^* =  & \quad \underset{q_j}{\text{argmax}}
+\gamma^* =  & \quad \underset{\gamma_j}{\text{argmax}}
 & & \gamma' \xi \gamma \\
 & \text{s.t.}
 & & \gamma' \gamma = 1\\
-& & & \gamma(z) = 0 \ \forall \ z > n^*
+& & & \gamma(z) = 0 \ \forall \ z > n^f
 \end{aligned}
 \end{equation*}
 Finally, $\gamma^*$ is the eigenvector related to the maximum eigenvalue of $\xi$.
 \subsection{Identifying a non-fundamental shocks}
-In order to identify a non-fundamental shock, which is defined as an innovation that is not related to global movements, we present a novel way to find a second anticipated shock orthogonal to the previously identified GOS. \\
-We define $\Lambda^{(i)}$ as the accumulated FEV matrix of an $i$ variable. Then, the system to solve is:
+In order to identify a non-fundamental shock, which is defined as an innovation that is not related to global movements, I present a novel way to find a second shock. \\
+I define $\Lambda^{(i)}$ as the accumulated FEV matrix of an $i$ variable. Then, the system to solve is:
 \begin{equation*}
 \begin{aligned}
 \Psi* =  & \quad \underset{\Psi}{\text{argmax}}
@@ -207,7 +165,7 @@ We define $\Lambda^{(i)}$ as the accumulated FEV matrix of an $i$ variable. Then
 \end{aligned}
 \end{equation*}
 The new restriction $\Psi' \gamma = 0$ is imposed to ensure that the second identification vector will be orthogonal to the global shock.\\
-Lets work with the $n*$ (since the rest are 0), the second condition implies that:
+Lets work with the $n^f$ (since the rest are 0), the second condition implies that:
 \begin{align*}
 	\begin{bmatrix}
 		\psi_1 & \psi_2 & ... &\psi_n
@@ -243,5 +201,5 @@ with the FOC:
 \begin{equation*}
 	\Lambda_{\Gamma}*\varphi = \lambda B \varphi
 \end{equation*}
-Which is a generalized eigenvalue-eigenvector problem. Therefore, the solution will be the vector associated with the larger generalized eigenvector.
+Which is a generalized eigenvalue-eigenvector problem. Therefore, the solution will be the vector associated with the larger generalized eigenvalue.
 \end{document}
