@@ -524,21 +524,34 @@ for i = 1:Tmonth
     end
 end
 
+Δipc = XLSX.readdata("$dir1/inflation.xlsx", "data!A1:K301");
+index = [findfirst(x -> x == i, Δipc[1,:]) for i in list];
+Δipc = dropdims(Δipc[2:end,index], dims=2);
+Tmonth = size(Δipc)[1];
+Δipcq = zeros(Int(floor(Tmonth / 3)),10);
+for i = 1:Tmonth
+    if mod(i, 3) == 0
+        j = div(i, 3)
+        Δipcq[j,:] = Δipc[i,:]
+    end
+end
+Δipcq = Δipcq[17:end,:]
+rrateq = irateq - Δipcq
 #= ------------------------------------------------------------------------
 	CREATING THE DATASET
 The order of the variables are:
 g20 >> comm >> baa >> gdp >> cons >> inv >> trade >> reer >> irate
 -------------------------------------------------------------------------- =#
-mec1 = convert(Array{Float64},[g20 tot[:,1] baaq ec1 reer[:,1] irateq[:,1]]);
-mec2 = convert(Array{Float64},[g20 tot[:,2] baaq ec2 reer[:,2] irateq[:,2]]);
-mec3 = convert(Array{Float64},[g20 tot[:,3] baaq ec3 reer[:,3] irateq[:,3]]);
-mec4 = convert(Array{Float64},[g20 tot[:,4] baaq ec4 reer[:,4] irateq[:,4]]);
-mec5 = convert(Array{Float64},[g20 tot[:,5] baaq ec5 reer[:,5] irateq[:,5]]);
-mec6 = convert(Array{Float64},[g20 tot[:,6] baaq ec6 reer[:,6] irateq[:,6]]);
-mec7 = convert(Array{Float64},[g20 tot[:,7] baaq dc1 reer[:,7] irateq[:,7]]);
-mec8 = convert(Array{Float64},[g20 tot[:,8] baaq dc2 reer[:,8] irateq[:,8]]);
-mec9 = convert(Array{Float64},[g20 tot[:,9] baaq dc3 reer[:,9] irateq[:,9]]);
-mec10 = convert(Array{Float64},[g20 tot[:,10] baaq dc4 reer[:,10] irateq[:,10]]);
+mec1 = convert(Array{Float64},[g20 tot[:,1] baaq ec1 reer[:,1] rrateq[:,1]]);
+mec2 = convert(Array{Float64},[g20 tot[:,2] baaq ec2 reer[:,2] rrateq[:,2]]);
+mec3 = convert(Array{Float64},[g20 tot[:,3] baaq ec3 reer[:,3] rrateq[:,3]]);
+mec4 = convert(Array{Float64},[g20 tot[:,4] baaq ec4 reer[:,4] rrateq[:,4]]);
+mec5 = convert(Array{Float64},[g20 tot[:,5] baaq ec5 reer[:,5] rrateq[:,5]]);
+mec6 = convert(Array{Float64},[g20 tot[:,6] baaq ec6 reer[:,6] rrateq[:,6]]);
+mec7 = convert(Array{Float64},[g20 tot[:,7] baaq dc1 reer[:,7] rrateq[:,7]]);
+mec8 = convert(Array{Float64},[g20 tot[:,8] baaq dc2 reer[:,8] rrateq[:,8]]);
+mec9 = convert(Array{Float64},[g20 tot[:,9] baaq dc3 reer[:,9] rrateq[:,9]]);
+mec10 = convert(Array{Float64},[g20 tot[:,10] baaq dc4 reer[:,10] rrateq[:,10]]);
 dataset = (mec1, mec2, mec3, mec4, mec5, mec6, mec7, mec8, mec9, mec10)
 return wvar,dataset, qlabel,list;
 end
