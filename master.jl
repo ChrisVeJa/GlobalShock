@@ -16,7 +16,7 @@ include(".//fcns//part1.jl");
 # ===========================================================================
 # 							[1] Introduction
 # ===========================================================================
-colist  = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
+colist  = [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta]
 dir1 = "G:/My Drive/GlobalShocks/data";
 labels = ["GDP G20" "ComPrice" "BAA spread" "GDP" "C" "I" "XN" "q" "i"];
 p = 2
@@ -117,16 +117,7 @@ p6 = myplot([raw1[6,:,:]  raw2[6,:,:]],h,"");
 plot(p1,p2,p3,p4,p5,p6, layout=(2,3),size=(1200,800),
 	title = ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"])
 savefig(".//Figures//World//CompFEV.svg");
-#=
-raw = cat(ecx.IrfGS.Qntls[2][4:end,:], ecx.IrfNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw, ".//Figures//World//CompIRFecx.svg");
-raw = cat(dcx.IrfGS.Qntls[2][4:end,:], dcx.IrfNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw, ".//Figures//World//CompIRFdcx.svg");
-raw = cat(ecx.FevGS.Qntls[2][4:end,:], ecx.FevNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw, ".//Figures//World//CompFEVecx.svg");
-raw = cat(dcx.FevGS.Qntls[2][4:end,:], dcx.FevNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
-=#
+
 # ===========================================================================
 # 				[5] COMPARISON OF METHODOLOGIES
 # ===========================================================================
