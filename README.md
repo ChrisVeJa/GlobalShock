@@ -1,10 +1,10 @@
 # **GLOBAL SHOCKS: Heterogeneous effect in small open economies**
-
+## List of codes
 ### [1.1] Master program
 Requisites: Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributions, Plots, CSV, RCall, JLD;
 .jl files to include: `GSshock`,`GSComp`, `fcns`, and  `part1`
 
-A briefly explanation of the master program
+A briefly explanation of the master program (this is a pseudo-code please dont try to run it)
 ```julia
 using Random, DataFrames, XLSX, LinearAlgebra, Statistics,
 	StatsBase, Distributions, Plots, CSV, RCall, JLD;
@@ -12,29 +12,30 @@ include(".//fcns//GShock.jl");
 include(".//fcns//GSComp.jl");
 include(".//fcns//fcns.jl");
 include(".//fcns//part1.jl");
-colist  := List of colors that you will use in the  [:sienna4 :slateblue4 :teal :darkgoldenrod :blue :green :orange  :red :purple :magenta :rosybrown4 :darkorchid4 :hotpink3 :palevioletred4 :cyan]
-dir1 = "G:/My Drive/GlobalShocks/data";
-labels = ["GDP G20" "ComPrice" "BAA spread" "GDP" "C" "I" "XN" "q" "i"];
-p = 2
-h = 40
-nrep = 5000
+colist  := List of colors that you will use in the graphics (type Symbol)
+dir1 := Directory that host the data
+labels := Variable names
+p := lags ; h := horizon for IRF, FEV ; nrep := Number of simulations
+
+if you want to load the data run 
+	wvar, dataset, qlabel, list = GShock.GSDataLoader(dir1);
+	save("GSdata.jld", "dataset", dataset, "wvar", wvar,"qlabel", qlabel, "list" , list);
+else
+	dd = load("GSdata.jld");
+	wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"],dd["qlabel"], dd["list"]);
+end
+
+part1(dataset,wvar) # This line run all the work for the introduction
 ```
+Now we have the data, then we need to set some prelimaries
 ```julia
-# time wvar, dataset, qlabel, list = GShock.GSDataLoader(dir1);
-# save("GSdata.jld", "dataset", dataset, "wvar", wvar,"qlabel", qlabel, "list" , list);
-dd = load("GSdata.jld");
-wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"],dd["qlabel"], dd["list"]);
-part1(dataset,wvar);
-dd = nothing
+nc := Number of countries; nv := Number of variables; Lτ := Lower bound ; Uτ := Upper bound for maximization
+bnam := prefix for the models (type String) 
+cut := Number of countries that belongs to ecx
+CouList = bnam .* string.(1:nc) .* ".svg" # it creates the name for the graphs
 ```
+After that, we estimate each model using a loop and metaprogramming
 ```julia
-nc = nfields(dataset)
-nv = size(dataset[1])[2]
-Lτ = 1
-Uτ = 5
-bnam = "Country"
-cut = 6
-CouList = bnam .* string.(1:nc) .* ".svg"
 for i in 1:nc
 	y = dataset[i]
 	output = Symbol.(bnam.* string(i));
