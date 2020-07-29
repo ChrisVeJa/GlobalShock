@@ -241,6 +241,55 @@ function GSsimulation(...)
             Γ = sign.(diag(Γ))' .* Γ  # Normalization to improve identification
 end
 ```
+### [3] Module GScomp
+
+```julia
+ecx, dcx, ΔIRFcoun = ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
+```
+```julia
+function ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
+    for each country in the dataset
+        cout = GScomparison(y,p,h,Lτ, Uτ, nmodls) # make the comparison
+        ΔIRF[:, :, range] = cout 	# storage
+    end
+end
+```
+
+```julia
+ΔIRF =  GScomparison(y, p, h, Lτ, Uτ, nmodls)
+```
+```julia
+function GScomparison(...)
+    # [1] Estimation of reduce for VAR
+    # [2] Calculating variance-covariance matrix
+    # [2]
+    for i = 1:nmodls ; makes the comparison ; end
+end
+```
+```julia
+Φ, Γ, Γcom = GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx, varGS)
+```
+```julia
+function GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx, varGS)
+    # [1] Drawing βₙ
+    # [2] Cholesky decomposition
+    # [3] Calculating IRF for the desired interval [τ_, τ]
+    	IRF := IRF matrix 
+    # [4] New Augmented ToT 
+    Λtot = Λmatrix(IRF, pos_tot, m; Lτ = Lτ, Uτ = Uτ, Xblock = true, nx = nx)
+    ξcom = eigen(Λtot).vectors[:, end:-1:1]
+    ξcom = sign.(diag(ξcom))' .* ξcom
+    Γcom = [C1[:, 1:nx] * ξcom C1[:, nx+1:end]]
+    Γcom = sign.(diag(Γcom))' .* Γcom
+    # --------------------------------------------------------
+    # [5] Global Shocks Identification
+    Ξ = dropdims(sum(reshape(λ, 1, 1, :) .* Λ, dims = 3), dims = 3)
+    ξ = eigen(Ξ).vectors[:, end:-1:1]
+    Γ = [C1[:, 1:nx] * ξ C1[:, nx+1:end]]
+    Γ = sign.(diag(Γ))' .* Γ  # Normalization to improve identification
+end
+```
+### [4] Additional codes
 ### [1.1] Creating the groups of countries
 In this code we create a matrix with the mean and quintiles for a group de countries.
 ```julia
@@ -275,17 +324,3 @@ The following code creates a file `name.html` which print a matrix `matt` with t
 ```julia
 ToHtml(file, matt, colnames)
 ```
-
-
-### [1.4] Module GSComp
-```julia
-ecx, dcx, ΔIRFcoun = ComParison(dataset,p,h,Lτ,Uτ,nmodls, cut)
-```
-```julia
-ΔIRF =  GScomparison(y, p, h, Lτ, Uτ, nmodls)
-```
-```julia
-Φ, Γ, Γcom = GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx, varGS)
-```
-```
-
