@@ -71,36 +71,79 @@ savefig(".//Figures//World//Comparison.svg");
 ```
 We can nake something similar for the domestic bloc
 ```julia
-raw = cat(ecx.IrfGS.Qntls[2][4:end,:], ecx.IrfNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw, ".//Figures//World//CompIRFecx.svg");
-raw = cat(dcx.IrfGS.Qntls[2][4:end,:], dcx.IrfNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw, ".//Figures//World//CompIRFdcx.svg");
-raw = cat(ecx.FevGS.Qntls[2][4:end,:], ecx.FevNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw, ".//Figures//World//CompFEVecx.svg");
-raw = cat(dcx.FevGS.Qntls[2][4:end,:], dcx.FevNF.Qntls[2][4:end,:], dims=3);
-GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
+lab = ["Global Shock ECX" "Global Shock DCX" "Non-fun ECX" "Non-fun DCX"]
+raw1 = cat(ecx.IrfGS.Qntls[2][4:end, :], dcx.IrfGS.Qntls[2][4:end, :], dims = 3)
+raw2 = cat(ecx.IrfNF.Qntls[2][4:end, :], dcx.IrfNF.Qntls[2][4:end, :], dims = 3)
+p1 = myplot([raw1[1, :, :] raw2[1, :, :]], h, "")
+p2 = myplot([raw1[2, :, :] raw2[2, :, :]], h, "")
+p3 = myplot([raw1[3, :, :] raw2[3, :, :]], h, lab)
+p4 = myplot([raw1[4, :, :] raw2[4, :, :]], h, "")
+p5 = myplot([raw1[5, :, :] raw2[5, :, :]], h, "")
+p6 = myplot([raw1[6, :, :] raw2[6, :, :]], h, "")
+tit = ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"]
+plot(p1, p2, p3, p4, p5, p6, layout = (2, 3), size = (1200, 800), grid = false, title = tit)
+savefig(".//Figures//World//CompIRF.svg")
+
+raw1 = cat(ecx.FevGS.Qntls[2][4:end, :], dcx.FevGS.Qntls[2][4:end, :], dims = 3)
+raw2 = cat(ecx.FevNF.Qntls[2][4:end, :], dcx.FevNF.Qntls[2][4:end, :], dims = 3)
+p1 = myplot([raw1[1, :, :] raw2[1, :, :]], h, "")
+p2 = myplot([raw1[2, :, :] raw2[2, :, :]], h, "")
+p3 = myplot([raw1[3, :, :] raw2[3, :, :]], h, "")
+p4 = myplot([raw1[4, :, :] raw2[4, :, :]], h, "")
+p5 = myplot([raw1[5, :, :] raw2[5, :, :]], h, lab)
+p5 = plot(p5, legend = :bottomright)
+p6 = myplot([raw1[6, :, :] raw2[6, :, :]], h, "");
+plot(p1, p2, p3, p4, p5, p6, layout = (2, 3), size = (1200, 800), title = tit)
+savefig(".//Figures//World//CompFEV.svg")
 ```
 Finally we make the comparison between global shocks and news-augmented terms of trade
 ```julia
-Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset,p,h,Lτ,Uτ,nrep, cut);
-ppl = plot(layout=(3,3), size=(1200,800), title = labels)
-for i in 1:nv
-	bands = (Δecx.bands[1][i,1:20] - Δecx.bands[2][i,1:20],	Δecx.bands[2][i,1:20] - Δecx.bands[3][i,1:20])
-	plot!(1:20, Δecx.bands[2][i,1:20],c=:darkgoldenrod, ribbon = bands, fillalpha=0.2,
-		label = :false, w = 1.5, grid= :false, subplot=i, framestyle = :zerolines)
+Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset, p, h, Lτ, Uτ, nrep, cut);
+ppl = plot(layout = (3, 3), size = (1200, 800), title = labels)
+for i = 1:nv
+    bands = (
+        Δecx.bands[1][i, 1:20] - Δecx.bands[2][i, 1:20],
+        Δecx.bands[2][i, 1:20] - Δecx.bands[3][i, 1:20],
+    )
+    plot!(
+        1:20,
+        Δecx.bands[2][i, 1:20],
+        c = :darkgoldenrod,
+        ribbon = bands,
+        fillalpha = 0.2,
+        label = :false,
+        w = 1.5,
+        grid = :false,
+        subplot = i,
+        framestyle = :zerolines,
+    )
 end
 savefig("./Figures/CompIRFECX.svg")
-ppl = plot(layout=(3,3), size=(1200,800), title = labels)
-for i in 1:nv
-	bands = (Δdcx.bands[1][i,1:20] - Δdcx.bands[2][i,1:20],	Δdcx.bands[2][i,1:20] - Δdcx.bands[3][i,1:20])
-	plot!(1:20, Δdcx.bands[2][i,1:20],c=:purple, ribbon = bands, fillalpha=0.2,
-		label = :false, w = 1.5, grid= :false, subplot=i, framestyle = :zerolines)
+ppl = plot(layout = (3, 3), size = (1200, 800), title = labels)
+for i = 1:nv
+    bands = (
+        Δdcx.bands[1][i, 1:20] - Δdcx.bands[2][i, 1:20],
+        Δdcx.bands[2][i, 1:20] - Δdcx.bands[3][i, 1:20],
+    )
+    plot!(
+        1:20,
+        Δdcx.bands[2][i, 1:20],
+        c = :purple,
+        ribbon = bands,
+        fillalpha = 0.2,
+        label = :false,
+        w = 1.5,
+        grid = :false,
+        subplot = i,
+        framestyle = :zerolines,
+    )
 end
 plot(ppl)
 savefig("./Figures/CompIRFDCX.svg")
  # The rest of the code is not necessary
 ```
-### [1.1] Module GShock
+After explaining the master code we will go through the modules and functions
+### [2] Module GShock
 ####  [1.1.1] STRUCTURES FOR CONTAINERS
 
 - `Param`
@@ -118,19 +161,14 @@ savefig("./Figures/CompIRFDCX.svg")
   - `IrfNF`: Impulse response function Non fundamental
   - `FevNF`: Forecast Error Variances decomposition Non fundamental
 
-The function `GSstimation` estimates the structural form for both shocks: global and non-fundamental, having as 
-
+The function `GSstimation` estimates the structural form for both shocks: global and non-fundamental, having
+the following syntax 
 ```julia
-gsolve::GSsolve, U, m::Tuple= GSstimation(y, p, h;
-	xblock= false,
-	GOS   = true,
-	nx    = 0,
-	VarGS = 1:3,
-	nmodls= 5000,
-	quint = [0.16 0.50 0.84],
-	NF    = true,
-	Lτ = 1, Uτ = 5,
-)
+gsolve::GSsolve, U, m::Tuple = GSstimation(y, p, h; 
+			xblock= false, GOS = true, nx = 0, VarGS = 1:3, 
+			nmodls= 5000, quint = [0.16 0.50 0.84], NF= true, 
+			Lτ = 1, Uτ = 5,
+			)
 ```
 The central part of the working is made by the function `GSsimulation`, which have the following syntax
 ```julia
