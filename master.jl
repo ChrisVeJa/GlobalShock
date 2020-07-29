@@ -30,7 +30,7 @@ nrep = 5000
 dd = load("GSdata.jld")
 wvar, dataset, qlabel, list = (dd["wvar"], dd["dataset"], dd["qlabel"], dd["list"])
 part1(dataset, wvar)
-dd = nothing
+dd = nothing  # it is just to reduce the memory stress
 # ===========================================================================
 # 							[2] GLOBAL SHOCKS
 # ===========================================================================
@@ -59,17 +59,9 @@ end
 ecx, dcx = GSgroups(bnam, 1:nc, nv, h, nrep, cut);
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "Groups", varI = 4)
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4, subdir = "Groups", varI = 4)
-ToHtml(
-    "table1.html",
-    round.(ecx.FevGS.Qntls[2][4:end, :]', digits = 2),
-    ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"],
-)
-ToHtml(
-    "table2.html",
-    round.(dcx.FevGS.Qntls[2][4:end, :]', digits = 2),
-    ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"],
-)
-
+varnames = ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"]
+ToHtml("table1.html",round.(ecx.FevGS.Qntls[2][4:end, :]', digits = 2), varnames)
+ToHtml("table2.html", round.(dcx.FevGS.Qntls[2][4:end, :]', digits = 2), varnames)
 
 # ===========================================================================
 # 					[3] COMPARISON OF SHOCKS
@@ -168,41 +160,5 @@ for i = 1:nv
 end
 plot(ppl)
 savefig("./Figures/CompIRFDCX.svg")
-ΔIRFcoun = ΔIRFcoun[10:end, :, :];
-anim = @animate for co = 1:nc
-    ppl = plot(layout = (3, 3), size = (1200, 800), title = labels)
-    for i = 1:nv
-        if i == 9
-            plot!(
-                1:20,
-                ΔIRFcoun[i, 1:20, co],
-                c = colist[co],
-                label = list[co],
-                w = 2.5,
-                grid = :false,
-                alpha = 0.8,
-                subplot = i,
-                framestyle = :zerolines,
-                legendfontsize = 10,
-                fg_legend = :transparent,
-                bg_legend = :transparent,
-                legend = :best,
-            )
-        else
-            plot!(
-                1:20,
-                ΔIRFcoun[i, 1:20, co],
-                c = colist[co],
-                alpha = 0.8,
-                label = :false,
-                w = 2.5,
-                grid = :false,
-                subplot = i,
-                framestyle = :zerolines,
-            )
-        end
-    end
-end
-gif(anim, "./Figures/IRFdif.gif", fps = 1)
 cp(".//Figures", ".//docs//images//Figures", force = true)
 display("Workout finished")
