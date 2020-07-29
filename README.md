@@ -57,12 +57,10 @@ and the explanation over global variables (from variable 1 to variable 3)
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "World", varI=1, varF=3);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "World", varI=1, varF=3);
 ```
-
+Creating the matrix containers for global shock and non fundamental. Then, we graph
 ```julia
 GStoWorld = cat(ecx.FevGS.Qntls[2][1:3,:],dcx.FevGS.Qntls[2][1:3,:], dims=3);
 NFtoWorld = cat(ecx.FevNF.Qntls[2][1:3,:],dcx.FevNF.Qntls[2][1:3,:], dims=3);
-```
-```julia
 lab = ["Global Shock ECX" "Global Shock DCX" "Non-fun ECX" "Non-fun DCX"];
 tit = ["Global Output" "Commodity Price" "BAA spread"];
 p1 = myplot([GStoWorld[1,:,:]  NFtoWorld[1,:,:]],h,"");
@@ -71,6 +69,7 @@ p3 = myplot([GStoWorld[3,:,:]  NFtoWorld[3,:,:]],h,"");
 plot(p1,p2,p3, layout=(1,3),size=(1200,400), title = tit);
 savefig(".//Figures//World//Comparison.svg");
 ```
+We can nake something similar for the domestic bloc
 ```julia
 raw = cat(ecx.IrfGS.Qntls[2][4:end,:], ecx.IrfNF.Qntls[2][4:end,:], dims=3);
 GraphAux(raw, ".//Figures//World//CompIRFecx.svg");
@@ -81,6 +80,7 @@ GraphAux(raw, ".//Figures//World//CompFEVecx.svg");
 raw = cat(dcx.FevGS.Qntls[2][4:end,:], dcx.FevNF.Qntls[2][4:end,:], dims=3);
 GraphAux(raw,".//Figures//World//CompFEVdcx.svg");
 ```
+Finally we make the comparison between global shocks and news-augmented terms of trade
 ```julia
 Δecx, Δdcx, ΔIRFcoun = GSComp.ComParison(dataset,p,h,Lτ,Uτ,nrep, cut);
 ppl = plot(layout=(3,3), size=(1200,800), title = labels)
