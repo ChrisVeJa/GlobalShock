@@ -1,6 +1,6 @@
 # **GLOBAL SHOCKS: Heterogeneous effect in small open economies**
-## List of codes
-### [1.1] Master program
+## LIST OF CODES
+### [1] Master program
 Requisites: Random, DataFrames, XLSX, LinearAlgebra, Statistics, StatsBase, Distributions, Plots, CSV, RCall, JLD;
 .jl files to include: `GSshock`,`GSComp`, `fcns`, and  `part1`
 
@@ -144,7 +144,7 @@ savefig("./Figures/CompIRFDCX.svg")
 ```
 After explaining the master code we will go through the modules and functions
 ### [2] Module GShock
-####  [1.1.1] STRUCTURES FOR CONTAINERS
+####  [2.1] Containers
 
 - `Param`
   - `B` : Estimated βs
@@ -160,7 +160,7 @@ After explaining the master code we will go through the modules and functions
   - `FevGS`: Forecast Error Variances decomposition
   - `IrfNF`: Impulse response function Non fundamental
   - `FevNF`: Forecast Error Variances decomposition Non fundamental
-
+####  [2.2] Main functions
 The function `GSstimation` estimates the structural form for both shocks: global and non-fundamental, having
 the following syntax 
 ```julia
@@ -170,11 +170,77 @@ gsolve::GSsolve, U, m::Tuple = GSstimation(y, p, h;
 			Lτ = 1, Uτ = 5,
 			)
 ```
+Now I will explain the code itself (again, it is a pseudo code but follow pretty close the original)
+```julia
+function GSstimation(...)
+    # 1. Estimation of the reduce form of the VAR
+    m = size(y)[2]
+    Y, X = VARData(...)  # Creation of regressors from y
+    B, Φ = OLSbetas(...) # Restricted OLS estimation
+
+    # [2] Calculate variance-covariance matrix
+    # [3] Creates data containers
+    # [4] Identification
+	  for i = 1:nmodls
+		β, Φ, γ, ξ[:, :, i] =  	GSsimulation(...) # makes the simulation
+		Uaux   = γ\(E') # calculates partial identified structural shocks
+	        IRF, FEV = irf_fevd(Φ, γ, h, m) # computing irf and fevd
+	  end
+    # [5] Calculating percentiles and creating outputs
+end
+```
 The central part of the working is made by the function `GSsimulation`, which have the following syntax
 ```julia
 β, Φ, Γ, ξ = GSsimulation(Y, X, B, SS, p, Lτ, Uτ; Xblock = false, nx =3, varGS = 1:3, nonfun = true)
 ```
+and makes:
+```julia
+function GSsimulation(...)
+    # --------------------------------------------------------
+    # [1] Bayesian step: 
+    T, m   = size(Y)
+    σdist  = InverseWishart(T, SS)   # distribution for Σ
+    b      = vec(B)
+    rc, cc = size(B)
+    Σ      = rand(σdist)             # Sampling Σ
+    XX     = Symmetric(inv(X'X), :L)
+    kr     = kron(Σ, XX)
+    disti  = MvNormal(b, kr)	     # distribution for  β
+    β, Φ   = BetaDraw(disti, rc, cc, m, p)  #  draw β until get one stable
 
+    C1 := Cholesky Identification | Σ, β
+    IRF:= Calculating IRFs for the desired interval
+
+    # [2] Global Shocks Identification
+	    # [Step 1] Matrix Λ and their weights
+	    for i = 1:tvars
+		Λ[:, :, i] = Λmatrix(IRF, varGS[i], m; Lτ = Lτ, Uτ = Uτ, Xblock = Xblock, nx = nx)
+		λ[i] 	   = tr(Λ[:, :, i])
+	    end
+	    λ = prod(λ) ./ λ  # these are the weights 
+
+	    # [Step 2] Matrix ξ
+    	    Ξ := weigthed sum of  Λ
+	    ξ := ordered eigenvector from the larger to smaller
+    # [3] NON FUNDAMENTAL SHOCK
+	    nξ  = size(ξ)[1];
+	    L   = [-ξ[2:end,1] ./ ξ[1,1] I(nξ-1)] # This is the matrix ϕ'Γ'
+	    BL  = L*L';
+	    Λaux= L*Λ[:,:,pos_tot]*L';   	 # pos_tot is the position of terms of trade 
+	    ψ   = eigen(Λaux, BL).vectors[:,end] # generalized eigenvalue-eigenvector
+	    Ξ   = [ξ[:,1] Ψ]			 # new matrix with identied response vectors
+	    nsp = nullspace(Array(Ξ'))           # Calculating the null-space for the matrix Ξ
+	    ξ   = [Ξ nsp[:,1:(nξ-2)]];		 # Identification matrix (just the first two columns)
+
+    # [4] New Identification matrix
+	    if there is an exogenous bloc
+		Γ = [C1[:, 1:nx] * ξ C1[:, nx+1:end]]
+	    else
+		Γ = C1 * ξ
+	    end
+            Γ = sign.(diag(Γ))' .* Γ  # Normalization to improve identification
+end
+```
 ### [1.1] Creating the groups of countries
 In this code we create a matrix with the mean and quintiles for a group de countries.
 ```julia
