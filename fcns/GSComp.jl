@@ -87,7 +87,7 @@ function GSComSim(Y, X, B, SS, p, Lτ, Uτ, pos_tot, nx, varGS)
         IRF[:, :, i] = aux_IRF[1:m, 1:m, i] * C1
     end
     # --------------------------------------------------------
-    # [2.2.4] New Augmented ToT without Xblock as in Zeev
+    # [2.2.4] New Augmented ToT as in Zeev
     Λtot = Λmatrix(IRF, pos_tot, m; Lτ = Lτ, Uτ = Uτ, Xblock = true, nx = nx)
     ξcom = eigen(Λtot).vectors[:, end:-1:1]
     ξcom = sign.(diag(ξcom))' .* ξcom
