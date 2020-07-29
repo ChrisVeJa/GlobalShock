@@ -34,7 +34,7 @@ bnam := prefix for the models (type String)
 cut := Number of countries that belongs to ecx
 CouList = bnam .* string.(1:nc) .* ".svg" # it creates the name for the graphs
 ```
-After that, we estimate each model using a loop and metaprogramming
+After that, we estimate and graphic each model using a loop and metaprogramming
 ```julia
 for i in 1:nc
 	y = dataset[i]
@@ -45,19 +45,19 @@ for i in 1:nc
 	GSGraph(model[1],CouList[i], labels, colg = colist[i], varI=4);
 end
 ```
+With that, we can create the country groups and made tha graph for the contribution to domestic variable FEV (from the variable number 4)
 ```julia
 ecx, dcx  = GSgroups(bnam,1:nc,nv,h,nrep,cut);
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "Groups", varI=4);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "Groups", varI=4);
-ToHtml("table1.html",round.(ecx.FevGS.Qntls[2][4:end,:]', digits=2),
-        ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"]);
-ToHtml("table2.html",round.(dcx.FevGS.Qntls[2][4:end,:]', digits=2),
-        ["GDP" "Consumption" "Investment" "Trade" "REER" "Monetary Policy"]);
+# Next lines creates the html tables (not important)
 ```
+and the explanation over global variables (from variable 1 to variable 3)
 ```julia
 GSGraph(ecx, "ECX.svg", labels, colg = :darkgoldenrod, subdir = "World", varI=1, varF=3);
 GSGraph(dcx, "DCX.svg", labels, colg = :darkorchid4 , subdir = "World", varI=1, varF=3);
 ```
+
 ```julia
 GStoWorld = cat(ecx.FevGS.Qntls[2][1:3,:],dcx.FevGS.Qntls[2][1:3,:], dims=3);
 NFtoWorld = cat(ecx.FevNF.Qntls[2][1:3,:],dcx.FevNF.Qntls[2][1:3,:], dims=3);
@@ -98,28 +98,8 @@ for i in 1:nv
 end
 plot(ppl)
 savefig("./Figures/CompIRFDCX.svg")
-ΔIRFcoun = ΔIRFcoun[10:end,:,:];
-anim = @animate  for co in 1:nc
-	ppl = plot(layout=(3,3), size=(1200,800), title = labels)
-	for i in 1:nv
-		if i == 9
-			plot!(1:20, ΔIRFcoun[i,1:20,co], c=colist[co],
-				label = list[co], w = 2.5, grid= :false, alpha=0.8,
-				subplot=i, framestyle = :zerolines, legendfontsize = 10,
-				fg_legend= :transparent, bg_legend= :transparent,
-				legend=:best)
-		else
-			plot!(1:20, ΔIRFcoun[i,1:20,co], c=colist[co], alpha=0.8,
-				label = :false, w = 2.5, grid= :false,
-				subplot=i, framestyle = :zerolines)
-		end
-	end
-end
-gif(anim, "./Figures/IRFdif.gif", fps = 1);
-cp(".//Figures",".//docs//images//Figures",force=true);
-display("Workout finished")
+ # The rest of the code is not necessary
 ```
-
 ### [1.1] Module GShock
 ####  [1.1.1] STRUCTURES FOR CONTAINERS
 
