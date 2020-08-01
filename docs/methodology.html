@@ -35,12 +35,16 @@
 									<header class="main">
 										<h1>Global shock identification</h1>
 									</header>
-
-									<p> In the previous section I pointed out the tight relationship between <i> "news-augmented"</i> commodities
-										price shocks and global shocks, and that we need to test if both generates a similar patron and/or if are 
-										the same. To achieve this objective, we should find a identification strategy that allows to clearly 
-										isolated global shocks. In that line, I first define what is understood as a <b> global-shock</b> for the
-										scope of this paper
+									<p> In the previous section I pointed out the tight relation between <i>"news-augmented"</i> commodities price
+									shocks and global innovations, and that our need to test if both generate a similar patron and/or if are -in fact,
+									equals. The biggest issue in this approach is that without any narrative strategy and an observable variable is
+									unfeasible prove that medium run identification isolate news shocks specific to a variable. To show that, we can think
+									in the next variable \(y_t=\alpha x_t+\epsilon_t\) (where \(\epsilon\) is a white noise) , it is obvious that if we apply
+									directly a medium run strategy over \(y\) we will not obtain <i>news-y</i> shocks, but news-shocks over \(x\). 
+									In this sense, in order to recognize if anticipated shock obtained after to apply medium run identification to terms of trade are
+									effectively terms trade's news shock, we should find an identification strategy that allows to clearly isolated
+									commodities movements from global shocks, but first I will define what is understood as a global-shock for the scope of
+									this paper
 										<dl>
 											<dt>
 												<b>
@@ -55,14 +59,17 @@
 										</dl>
 										This definition implies certain characteristics when we talk about a <b> global -shocks</b>:
 										<ol>
-											<li>A global shock is defined in the whole foreign economy. Then, any identification strategy should take
-												into consideration that theoretically domestic variables are not are reliable source for pinning down. 
+											<li>
+												A global shock is defined in the whole foreign economy. Then, any identification strategy should take
+												into consideration that theoretically domestic variables are not a reliable source for pinning down them. 
 											</li>
-											<li>The nature of the shock is not predefined, without any narrating is not possible define them as demand, 
+											<li>
+												The nature of the shock is not predefined, without any narrating is not possible define them as demand, 
 												supply, technology or another. In this sense, I have to recognize the possibility that we are still 
-												accounting some class of reduced shock but at the same time it allow us to have more flexibility.
+												accounting some class of reduced shock but at the same time it allows us to have more flexibility.
 											</li>
-											<li>Being related to "primitives" although is a vague statement, for the scope of the paper entails that 
+											<li>
+												Being related to "primitives" although is a vague statement, for the scope of the paper entails that 
 												these innovations are a main driver in the external-block variability
 											</li>
 										</ol>
@@ -90,7 +97,7 @@
 										for identification since it avoids any possible feedback - and hence, power explanation. 
 									</p>
 									<p>
-										The estimation is made by restricted OLS to obtain a initial point for the bayesian draws. As it is common in
+										The estimation is made by restricted OLS to obtain an initial point for the bayesian draws. As it is common in
 										this class of modelling, I opt for a diffuse inverse-Wishart prior conditioning the selected draws for <b>B</b>
 										to be stable. It means that we are estimating a cointegrated-VAR for each country in the sample. This procedure 
 										gives similar results regards to a bootstrapping approach. The number of stationary simulations that we used is 5000
