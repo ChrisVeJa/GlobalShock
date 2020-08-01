@@ -35,16 +35,25 @@
 									<header class="main">
 										<h1>Global shock identification</h1>
 									</header>
-									<p> In the previous section I pointed out the tight relation between <i>"news-augmented"</i> commodities price
-									shocks and global innovations, and that our need to test if both generate a similar patron and/or if are -in fact,
-									equals. The biggest issue in this approach is that without any narrative strategy and an observable variable is
-									unfeasible prove that medium run identification isolate news shocks specific to a variable. To show that, we can think
-									in the next variable \(y_t=\alpha x_t+\epsilon_t\) (where \(\epsilon\) is a white noise) , it is obvious that if we apply
-									directly a medium run strategy over \(y\) we will not obtain <i>news-y</i> shocks, but news-shocks over \(x\). 
-									In this sense, in order to recognize if anticipated shock obtained after to apply medium run identification to terms of trade are
-									effectively terms trade's news shock, we should find an identification strategy that allows to clearly isolated
-									commodities movements from global shocks, but first I will define what is understood as a global-shock for the scope of
-									this paper
+									<p> 
+										Is it plausible to think that global variables respond to an underlying driver? or is it more realistic to believe that
+										commodities movements are orthogonal shocks? Regards those, literature has not a unique response. Many models and
+										researchers treat commodity prices as exogenous variables for small open economies. In this sense, ZPV application
+										surges like a natural, and very intuitively response to SGU results. The anticipated fraction of the augmented-news
+										shock over terms of trade (or commodities prices) could reconcile the conclusion of SGU with the broadly idea about the
+										importance of commodities for small open economies.
+									</p>
+									<p>
+										However, in the previous section I pointed out the tight relation between \textit{"news-augmented"} commodities price
+										shocks and global innovations, and that our need to test if both generate a similar patron and/or if are -in fact,
+										equals. The biggest issue in this approach is that without any narrative strategy and an observable variable is
+										unfeasible prove that medium run identification isolate news shocks specific to a variable. To show that, we can think
+										in the next variable $y_t=\alpha x_t+\epsilon_t$ (where $\epsilon$ is a white noise) , it is obvious that if we apply
+										directly a medium run strategy over $y$ we will not obtain ``news-y" shocks, but news-shocks over $x$. In this sense, in
+										order to recognize if anticipated shock obtained after to apply medium run identification to terms of trade are
+										effectively terms trade's news shock, we should find an identification strategy that allows to clearly isolated
+										commodities movements from global shocks, but first I will define what is understood as a global-shock for the scope of
+										this paper
 										<dl>
 											<dt>
 												<b>
@@ -60,17 +69,17 @@
 										This definition implies certain characteristics when we talk about a <b> global -shocks</b>:
 										<ol>
 											<li>
-												A global shock is defined in the whole foreign economy. Then, any identification strategy should take
-												into consideration that theoretically domestic variables are not a reliable source for pinning down them. 
+												A global shock is defined in the whole foreign economy. Then, any identification strategy should take into consideration
+												that theoretically domestic variables are not a reliable source for pinning down them
 											</li>
 											<li>
-												The nature of the shock is not predefined, without any narrating is not possible define them as demand, 
-												supply, technology or another. In this sense, I have to recognize the possibility that we are still 
-												accounting some class of reduced shock but at the same time it allows us to have more flexibility.
+												The nature of the shock is not predefined, without any narrating is not possible define them as demand, supply,
+												technology or another. In this sense, I have to recognize the possibility that we are still accounting some class of
+												reduced shock but at the same time it allows us to have more flexibility.
 											</li>
 											<li>
-												Being related to "primitives" although is a vague statement, for the scope of the paper entails that 
-												these innovations are a main driver in the external-block variability
+												Being related to "primitives" although is a vague statement, for the scope of the paper entails that these innovations
+												are a main driver in the external-block variability
 											</li>
 										</ol>
 									</p>
@@ -122,51 +131,80 @@
 									</p>
 									<hr class="major" />
 									<h2>Identification of Global Shocks</h2>
-									As global shocks are related with persistent conditions and under the assumption
-									of forward looking households I can exploit the framework develop by Uhlig (2003),
-									by generalized it for a group of variables. 
-								</p>
-								<p> 
-									In standard models a news-shock is identified
-									as the innovation that explains at maximum the forecast error variance of an specific 
-									variable. In contrast, my generalization defines an identification vector \(\gamma\)
-									as the underlying driver with maximum participation in the future not predicted
-									movements for an entire block. In a VAR with a exogenous economy the maximization problem is:
-								</p>
-								<p> 
+									<p>
+										As global shocks are related with persistent conditions and under the assumption of forward looking households I
+										can exploit the framework develop by Uhlig (2003), by generalized it for a group of variables. In standard models 
+										a news-shock is identified as the innovation that explains at maximum the forecast error variance of an specific variable. 
+										In contrast, my generalization defines an identification vector \(\gamma\) as the underlying driver with maximum 
+										participation in the future not predicted movements over a period \([\underline{\tau}:\overline{\tau}]\) for an entire block. 
+										In a VAR with a exogenous economy the maximization problem is:
+										$$
+											\begin{aligned}
+											& \underset{\gamma}{\text{max}}
+											& & \sum_{i \, \in \, y^f}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
+											\\
+											& \text{s.t.}
+											& & \gamma' \gamma = 1 \\
+											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+											\end{aligned}
+										$$
+									</p>
+									<p>
+										The objective function is the average contribution of \(\epsilon_\gamma\) on the FEV, I am assuming an equal weight
+										for each variable in the foreign block but it can easily be extend to the case with different ones. While the first
+										condition is assuring a unique identified vector, the second restriction is imposed to ensure that our identified
+										response vector has an extraneous source. Given the two block VAR is based on theory, the loss of information is
+										minimal, and indeed it helps to pin down the correct structural parameters. After some algebra this problem can be
+										re-expressed as:
+										$$
+											\begin{aligned}
+											& \underset{\gamma}{\text{max}}
+											& & \gamma' \xi \gamma \\
+											& \text{s.t.}
+											& & \gamma' \gamma = 1\\
+											& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+											\end{aligned}
+										$$
+										with \(\xi = \sum_i^{n^*} \left( \prod_{j=1,j\neq i}^{n^*} S^{i}(\underline{\tau},\overline{\tau})\right) \Lambda^{(i)}\),
+										and \(\Lambda^{(i)} =\sum_{i=0}^H (\overline{\tau}+1-max(\underline{\tau},i)) R^{'(k)}_iR^{(k)}_i \). The solution to this
+										system is to find the eigenvector related to the maximum eigenvalue of \(\xi\).
+									</p>
+									<hr class="major" />
+									<h2>Non-fundamental shock</h2>
+									<p>
+										After identify what I call global shock, we want to verify if commodities prices are mostly driven by this shock or
+										depends on idiosyncratic components. If global shocks determines a big portion of the predictability of commodities
+										prices we can not effectively argue that real term of trade are not a sufficient statistics for the world economy and
+										models can use them and expect a good tracing and reliable results.
+									</p>
+									<p>
+										To achieve that, we need to identify a second shock that is only related with commodity prices and compare it with
+										our first identified innovation. The nature of this only-related commodity shock should be at the same time: (i)
+										orthogonal with the global shocks (for a correct identification), and (ii) explain most of the possible predictability of
+										terms of trade. The last condition is imposed to ensure that our test is sensible.
+									</p>
+									<p>
+									As before, I will use a modified version of the common medium run identification approach, setting the following maximization problem:
 									$$
 										\begin{aligned}
-										& \underset{\gamma}{\text{max}}
-										& & \sum_{i \, \in \, y^f}\frac{S^{i}(\underline{\tau},\overline{\tau}|\gamma)}{S^{i}(\underline{\tau},\overline{\tau})}
-										\\
+										\varphi* = & \quad \underset{\varphi}{\text{argmax}}
+										& & \varphi' \Lambda^{(i)} \varphi \\
 										& \text{s.t.}
-										& & \gamma' \gamma = 1 \\
-										& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
+										& & \varphi' \Psi = 1\\
+										& & & \varphi'\gamma = 0 \\
+										& & & \varphi'(z) = 0 \ \forall \ z > n^*
 										\end{aligned}
 									$$
-								</p>
-								<p>
-										The objective function is the average contribution of \(\epsilon_\gamma\) on
-										the FEV, I am assuming an equal weight for each variable in the foreign
-										block but it can easily be extend to the case with different ones. While the
-										first condition is assuring a unique identified vector, the second restriction 
-										is imposed to ensure that our identified response vector has an extraneous
-										source. Since the two block VAR is based on theory, the loss of information
-										is minimal, and indeed it helps to pin down the correct structural parameters.
-								</p>
-								<p> After some algebra this problem can be reexpressed as:
+									where \(\Lambda^{(i)}\) is the cumulative forecast error variance in the interval \([\overline\tau: \underline\tau ]\)
+									of commodity-based terms of trade. As before, the first condition ensures an unique identification, the last one that
+									only external variables explain commodity prices, and the second one asks for orthogonality with respect to the global
+									shock. The solution to this system takes the form:
 									$$
-										\begin{aligned}
-										& \underset{\gamma}{\text{max}}
-										& & \gamma' \xi \gamma \\
-										& \text{s.t.}
-										& & \gamma' \gamma = 1\\
-										& & & \gamma(i) = 0 \ \forall \ i \not\in y^f
-										\end{aligned}
+									\Lambda_{\Gamma}*\varphi = \lambda B \varphi
 									$$
-									with \(\xi = \sum_{i\in y^f}\left(\prod_{j \in y^f_{-i}}S^{(i)}(\underline\tau, \overline \tau)\right)\Lambda^{(i)}\)
-									and its solution is the eigenvector related to the maximum eigenvalue of \(\xi\).
-								</p>
+									which is a generalized eigenvalue-eigenvector problem. Hence, the identified response vector is the associated with the
+									maximum generalized eigenvalue.	(the entire solution is showed in the appendix)
+									</p>
 								<p>
 									<b>Here talk about identification issues in economics ... </b>
 								</p>
