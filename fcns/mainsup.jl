@@ -75,9 +75,10 @@ function ROLS(x, β, m, p, nx)
 end
 
 # --------------------------------------------------------
-# [3.4] Simulating β from a diffuse inverse wishart prior
+# [3.4] Simulating β
 # --------------------------------------------------------
-function BetaDraw(disti, rc, cc, m, p)
+# from a diffuse inverse wishart prior
+function BetaDraw(disti, rc::Int, cc::Int, m::Int, p::Int)
     status = 1
     β_draw = Array{Float64,2}(undef, rc, cc)
     Φ_draw = Array{Float64,2}(undef, m * p, m * p)
@@ -90,6 +91,29 @@ function BetaDraw(disti, rc, cc, m, p)
         if ~isa(Φ_draw, Array)
             Φ_draw = Array(Φ_draw)
         end
+        status = maximum(abs.(eigvals(Φ_draw)))
+    end
+    return β_draw, Φ_draw
+end
+
+# Naive Bootstrapping
+function BetaDraw(B::Array,Φ::Array,E::Array,Y::Array; lags=2, n = 1000, cons= true, nx= 3)
+    smpl, nvar = size(E)
+    ord = rand(1:smpl,n)
+    eboot = [E[ord,:] zeros(n,nvar)]
+    startp = rand(lags:lags+smpl)
+    y =  Array{Float64,2}(undef, lags*nvar,n)
+    y[:,1] = vec(Y[startp:-1:startp-1,:]')
+    B0  = [B[end,:]; zeros(nvar,lags-1)]
+    for i in 2:n
+        y[:,i] = B0 + Φ*y[:,i-1] + eboot[i,:] ## the whole column because they arent structural
+    end
+    status = 1
+    while status >= 1
+        simpoint = rand(1:n)
+        y1 = Array(y[simpoint:simpoint+lags-1,1:nvar]')
+        Y1, X1 = VARData(y1, lags)
+        β_draw, Φ_draw = OLSbetas(Y1, X1, nvar, lags, Xblock = true, Nx = nx)
         status = maximum(abs.(eigvals(Φ_draw)))
     end
     return β_draw, Φ_draw
