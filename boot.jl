@@ -15,17 +15,6 @@ function phidraw(y,x,m,p,nsmpl,t)
     return ϕd
 end
 
-p = 2
-h = 40
-nrep = 5000
-dd = load("GSdata.jld")
-dataset = dd["dataset"]
-
-Y, X = VARData(dataset[1],p)
-B = (X'*X) \ (X'*Y)
-E = Y - X*B;
-
-# bootstrapping
 function boots(B,Y,E,p,nsmpl)
     t, m = size(Y)
     nx  = m*p+1
@@ -47,4 +36,17 @@ function boots(B,Y,E,p,nsmpl)
         collΦ[i] = phidraw(y,x,m,p,nsmpl,t)
     end
     return collΦ
+end
+
+p = 2
+h = 40
+nrep = 5000
+dd = load("GSdata.jld")
+dataset = dd["dataset"]
+
+for k in dataset
+    Y, X = VARData(k,p)
+    B = (X'*X) \ (X'*Y)
+    E = Y - X*B
+    boots(B,Y,E,p,nsmpl)
 end
