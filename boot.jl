@@ -40,13 +40,15 @@ end
 
 p = 2
 h = 40
-nrep = 5000
+nrep = 1000
+nsmpl = 100000
 dd = load("GSdata.jld")
 dataset = dd["dataset"]
-
-for k in dataset
-    Y, X = VARData(k,p)
+nc = nfields(dataset);
+Φdraw = Array{Any,1}(undef,nc)
+for k in 1:nc
+    Y, X = VARData(dataset[k],p)
     B = (X'*X) \ (X'*Y)
     E = Y - X*B
-    boots(B,Y,E,p,nsmpl)
+    Φdraw[k] = boots(B,Y,E,p,nsmpl)
 end
